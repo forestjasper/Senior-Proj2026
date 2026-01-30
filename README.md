@@ -15,7 +15,8 @@ Progress
 This project will be written using JavaScript, CSS, and HTML. We’ve established our website for documents using a Github repository, the project will be accessible via that same repository once it’s complete. We have all necessary developer tools needed to code in JavaScript installed, and we’ve created a basic GUI as a starting point for the project ahead. 
 
 Planning
-Gantt Chart: Available in Weekly Report 1 document
+Gantt Chart: 
+
 
 
 Website: The website we are using is Github, we plan to host the final project through Github Pages. The documentation is available through the README file of the repository, currently the repository is private because we’re still developing the project but once it’s finished it’ll be made public for anyone to access. The link is:  https://github.com/Cara-A/Senior-Project-2026.git 
