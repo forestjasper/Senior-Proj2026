@@ -15,7 +15,7 @@ Progress
 This project will be written using JavaScript, CSS, and HTML. We’ve established our website for documents using a Github repository, the project will be accessible via that same repository once it’s complete. We have all necessary developer tools needed to code in JavaScript installed, and we’ve created a basic GUI as a starting point for the project ahead. 
 
 Planning
-Gantt Chart: 
+Gantt Chart: Available in repository, https://github.com/Cara-A/Senior-Project-2026/blob/main/GanttChart.png
 
 
 
