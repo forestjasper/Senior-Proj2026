@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Character encoding -->
+    <meta charset="UTF-8">
+
+    <!-- Makes site responsive on different screen sizes -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Browser tab title -->
+    <title>Algorithm Visualizer</title>
+
+    <!-- ===================== -->
+    <!-- CSS -->
+    <!-- ===================== -->
+
+    <!-- Sidebar / menu layout -->
+    <link rel="stylesheet" href="css/menu.css">
+
+    <!-- Global colors, fonts, spacing -->
+    <link rel="stylesheet" href="css/main.css">
+</head>
+
+<body>
+
+    <!-- ===================== -->
+    <!-- Page Layout Wrapper -->
+    <!-- Holds sidebar + main content -->
+    <!-- ===================== -->
+    <div class="layout">
+
+        <!-- ===================== -->
+        <!-- Sidebar Navigation -->
+        <!-- Full-height vertical menu -->
+        <!-- ===================== -->
+        <aside class="sidebar">
+
+            <!-- Project title / logo -->
+        <div class="logo">
+            <h2 class="logo-top">Algorithm</h2>
+            <h2 class="logo-lower">Visualizer</h2>
+        </div>
+
+            <!-- Navigation links -->
+            <nav class="nav-links">
+                <a href="index.html" class ="active">Home</a> <!-- class active indicates which page the user is currently on.-->
+                <a href="algorithms.html">Algorithms</a>
+                <a href="visualizer.html">Visualizer</a>
+                <a href="about.html">About</a>
+            </nav>
+        </aside>
+
+        <header class="site-header">
+            <h1 class="word1"> Algorithm </h1>
+            <h1 class="word2"> Visualizer </h1>
+        </header>
+
+        <!-- ===================== -->
+        <!-- Main Page Content -->
+        <!-- Unique to this page -->
+        <!-- ===================== -->
+        <main class="content">
+
+            <!-- Page heading -->
+            <h1>Welcome to Algorithm Visualizer</h1> <!-- change color to yellow-->
+
+            <!-- Short intro text -->
+            <p>
+                This project provides interactive visualizations for core computer
+                science algorithms such as Breadth-First Search, Depth-First Search,
+                and sorting algorithms.
+            </p>
+
+            <!-- Call-to-action -->
+            <a class="cta" href="visualizer.html">
+                Start Visualizing
+            </a>
+            <a class="cta" href="algorithms.html">
+                Algorithm Desc.
+            </a>
+            <a class="cta" href="about.html">
+                About Project
+            </a>
+
+            <!-- Additional description -->
+            <p>
+                Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque
+                faucibus ex sapien vitae pellentesque sem placerat.
+            </p>
+
+        </main>
+
+    </div>
+
+    <!-- ===================== -->
+    <!-- JavaScript -->
+    <!-- No D3 on Home page -->
+    <!-- ===================== -->
+    <script src="js/script.js"></script>
+
+</body>
+</html>

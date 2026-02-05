@@ -1,0 +1,92 @@
+/* ===================== */
+/* Page Layout */
+/* ===================== */
+
+.layout {
+    /* Sidebar + content side by side */
+    display: flex;
+  
+    /* Fill full browser height */
+    height: 120vh;
+  }
+  
+  /* ===================== */
+  /* Sidebar */
+  /* ===================== */
+  
+  .sidebar {
+    /* Fixed width */
+    width: 180px;
+  
+    /* Darker than main background */
+    background-color: #212126;
+  
+    /* Inner spacing */
+    padding: 20px;
+  
+    /* Prevent shrinking on small screens */
+    flex-shrink: 0;
+  }
+  
+  /* ===================== */
+  /* Logo / Title */
+  /* ===================== */
+  .logo h2 {
+    margin: 0;
+    font-size: 25px;
+    
+    
+  }
+  .logo-top {
+    text-align: left;
+    letter-spacing: 2px;
+    color: #e5e2dc,; /* accent color */
+  }
+  .logo-lower {
+    text-align: left;
+    font-weight: 450;
+    padding-bottom: 30px;
+    color: #d4b476; /* accent color */
+  }
+  /* ===================== */
+  /* Navigation Links */
+  /* ===================== */
+  
+  .nav-links {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .nav-links a {
+    color: #E5E2DC;
+    text-decoration: none;
+  
+    padding: 10px 12px;
+    border-radius: 6px;
+  
+    transition: background-color 0.2s ease;
+  }
+  
+  .nav-links a:hover {
+    background-color: #52492b;
+  }
+  
+  .nav-links a.active {
+    border-left: 4px solid #d4b476
+  }
+  /* ===================== */
+  /* Main Content Area */
+  /* ===================== */
+  
+  .content {
+    /* Take remaining horizontal space */
+    flex: 1;
+  
+    /* Page padding */
+    padding: 40px;
+  
+    /* Allow scrolling if content overflows */
+    overflow-y: auto;
+  }
+  

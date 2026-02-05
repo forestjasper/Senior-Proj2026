@@ -1,0 +1,98 @@
+/* ===================== */
+/* Global Reset / Base */
+/* ===================== */
+.site-header {
+    position: fixed;
+    top: 0;
+    left: 220px;
+    right: 0px;
+    height: 60px;
+
+    display: flex;
+    align-items: center;
+    padding: 0 80px;
+    border-bottom: .5px solid #4b4944;
+
+    background-color: #1e1e22;
+
+}
+.site-header h1 {
+    
+    margin: 0;
+    font-size: 24px;
+
+}
+.word1 {
+    text-align: left;
+    letter-spacing: 2px;
+    color: #e5e2dc,; /* accent color */
+  }
+  .word2 {
+    text-align: left;
+    font-weight: 450;
+    
+    color: #d4b476; /* accent color */
+  }
+body {
+    /* Remove default browser spacing */
+    margin: 0;  
+    padding-top: 20px;
+  
+    /* Background color from your palette */
+    background-color: #1e1e22;
+    
+    /* Default text color */
+    color: #c4bbaa;
+  
+    /* Clean, readable system font */
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  
+  /* ===================== */
+  /* Headings */
+  /* ===================== */
+  
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 16px;
+  }
+  
+  h2 {
+    font-size: 1.4rem;
+  }
+  
+  /* ===================== */
+  /* Paragraphs */
+  /* ===================== */
+  
+  p {
+    line-height: 1.6;
+    max-width: 700px;
+  }
+  
+  /* ===================== */
+  /* Call-to-Action Button */
+  /* ===================== */
+  
+  .cta {
+    display: inline-block; /* allows padding + margin */
+    margin: 20px 25px;
+  
+    padding: 12px 20px;
+  
+    background-color: #D4B476; /* accent color */
+    color: #fffffe;
+    border-color: #f0cd89;
+    border-style: solid;
+    text-decoration: none;
+    font-weight: 600;
+  
+    border-radius: 6px;
+  
+    transition: background-color 0.2s ease;
+  }
+  
+  .cta:hover {
+    background-color: #e3c98c;
+  }
+  
