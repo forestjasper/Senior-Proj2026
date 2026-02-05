@@ -31,3 +31,35 @@ Leader of the Implementation Phase: Cara Antonucci
 
 
 
+
+
+Cara Antonucci
+Jasper Martin
+Senior Project II
+(CMSC-4920-100)
+2/5/25
+
+Weekly Report 2:
+What was accomplished last week?
+Last week, a timeline was set forth on how we will tackle this project moving forward. A basic menu was also created as a starting point for the project’s UI. All necessary tools for programming in JavaScript, CSS, and HTML were installed and we began UI development.
+
+ What problems were encountered?
+One problem that occurred was, the process of getting a repository to be hosted through GitHub Pages was a little more complicated than previously anticipated. Upon further research, we realized we were unable to admin both members of the team because the account the repository is currently on is a personal account. Only organization accounts can allow users to give collaborators admin rights to access the settings and through that publish the repository to GitHub Pages, which is a bit of a situation because it means half our team is unable to access the project settings fully and help with the publishing process.
+
+ If solved, what were their solutions?
+After looking more deeply into the organization accounts on Github, we found that making an organization account and transferring the repository to that account was a viable option for being able to put the repository on GitHub Pages while making sure both of us have admin rights and can fully access all aspects of the project.
+
+ How does our team progress align with our project Gantt chart?
+ As seen in the Gantt Chart provided, this week (02/02 - 02/06) is within our designated period for UI/UX development. This phase will continue over the next two weeks, bleeding into our Architecture Setup phase and our Algorithm Implementation phase. We anticipate developing the architecture and algorithms themselves will go hand in hand with developing the UI since this is a very visual project, getting our menu started was a crucial first step and moving forward it will likely continue to adapt to new changes/features made to the project.
+
+
+ What is the plan for this week?
+Next week, our team plans to start the Architecture  Setup phase and start to move into algorithm implementation
+
+ Each member’s contribution
+Jasper Martin - UI/UX development
+Cara Antonucci - Documentation
+
+
+
+
