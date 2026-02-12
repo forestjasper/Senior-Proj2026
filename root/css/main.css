@@ -89,58 +89,115 @@ body {
   
     border-radius: 6px;
   
-    transition: background-color 0.2s ease;
+    transition: transform 0.15s ease, box-shadow 0.2s ease;
+
   }
   
   .cta:hover {
     background-color: #e3c98c;
+    transform: translateY(-4px);
+
   }
   a:link {
     color: #fce9c4;
   }
-  .weeks-container {
-    background-color: #1e1e22;
-    padding: 30px;
-    border-radius: 16px;
-    margin-top: 30px;
+ 
 
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+.reports-row {
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+  width: 100%;
 }
-.week-card {
+
+.report-card {
   background-color: #2a2a2f;
-  padding: 20px;
-  border-radius: 12px;
-  border: 1px solid #3a3a40;
+  border: 2px solid #3a3a40;
+  border-radius: 20px;
+  padding: 15px;
+  width: 200px;
+ 
 
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 15px;
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
+
 }
-.week-card h2 {
+.report-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.35);
+}
+.report-card h3 {
   margin: 0;
-  color: #d4b476; /* your gold accent */
+  color: #d4b476;
+  font-size: 20px;
 }
 
-.week-card p {
+.report-card p {
   margin: 0;
   color: #e5e2dc;
+  font-size: 14px;
 }
-
-.week-link {
-  margin-top: 8px;
-  align-self: flex-start;
-
+.report-btn {
   background-color: #d4b476;
   color: #1e1e22;
   padding: 8px 14px;
-  border-radius: 6px;
+  border-radius: 8px;
   text-decoration: none;
   font-weight: bold;
-  transition: background-color 0.2s ease;
+  font-size: 14px;
+  align-self: flex-start;
+
+  transition: background-color 0.2s ease, transform 0.15s ease;
 }
 
-.week-link:hover {
+.report-btn:hover {
   background-color: #bfa063;
+  transform: translateY(-2px);
+}
+
+.section-title {
+  font-size: 26px;
+  color: #d4b476;
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  text-align: center;
+  border-bottom: 2px solid #3a3a40;
+}
+.overview-text {
+  color: #e5e2dc;
+  line-height: 1.6;
+  max-width: 800px;
+}
+
+
+.card-wrapper {
+  background-color: #303036;
+  padding: 10px 40px 40px 40px;
+  border-radius: 20px;
+  border: 2px solid #3a3a40;
+  margin-top: 40px;
+}
+
+
+.team-row {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+.team-member {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 20px;
+  color: #e5e2dc;
+  font-size: 16px;
+}
+.team-icon {
+  width: 28px;
+  height: 28px;
+  filter: drop-shadow(0 0 2px rgba(0,0,0,0.4));
 }

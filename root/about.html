@@ -60,36 +60,66 @@
         <!-- ===================== -->
         <main class="content">
 
-            <!-- Page heading -->
-            <h1>Welcome to Algorithm Visualizer</h1> <!-- change color to yellow-->
+            
 
-            <!-- Short intro text -->
-            <p>
-                This page contains documentation, weekly reports, and information regarding this projects team.
-                This project was created as a Senior Project in 2026
-            </p>
-            <div class="weeks-container">
-
-                <div class="week-card">
-                    <h2>Week 1</h2>
-                    <p>Initial project setup, repository creation, and planning.</p>
-                    <a href="WeeklyReport1D.docx" class="week-link">View Report</a>
-                </div>
             
-                <div class="week-card">
-                    <h2>Week 2</h2>
-                    <p>Designed layout structure and implemented sidebar navigation.</p>
-                    <a href="WeeklyReport2D.docx" class="week-link">View Report</a>
-                </div>
-            
-                <!-- Add more week-card blocks as needed -->
-            
+            <div class="section">
+                <h2 class="section-title">Project Overview</h2>
+                <p class="overview-text">
+                    Algorithm Visualizer is a senior project created in 2026 to help students and developers
+                    understand complex algorithms through interactive visual demonstrations. The project includes
+                    sorting, pathfinding, and graph-based algorithms, each presented with step-by-step animations
+                    and explanations.
+                </p>
             </div>
+<!-- Team members section-->
+            <div class="section card-wrapper">
+                
             
+                <div class="team-card">
+                    <h2 class="section-title">Meet the Team</h2>
+                    <div class="team-row">
+                        <div class="team-member">
+                            <img src="icon.svg" class="team-icon">
+                            <span>Cara Antonucci</span>
+                        </div>
             
-
-
+                        <div class="team-member">
+                            <img src="icon.svg" class="team-icon">
+                            <span>Jasper Martin</span>
+                        </div>
             
+                    
+                    </div>
+                </div>
+            </div>
+        <!-- Weekly report section-->    
+            <div class="card-wrapper">
+                <h2 class="section-title">Weekly Reports</h2>
+            
+                <div class="reports-row">
+            
+                    <div class="report-card">
+                        <h3>Week 2</h3>
+                        <p>Initial project setup, repo creation, and planning.</p>
+                        <a href="WeeklyReport1D.docx" class="report-btn">View Report</a>
+                    </div>
+            
+                    <div class="report-card">
+                        <h3>Week 3</h3>
+                        <p>Designed layout structure and implemented sidebar navigation.</p>
+                        <a href="WeeklyReport2D.docx" class="report-btn">View Report</a>
+                    </div>
+            
+                    <div class="report-card">
+                        <h3>Week 4</h3>
+                        <p>Altered about page layout, defined file hierarchy. Implemented D3 + SVG Example.</p>
+                        <a href="#" class="report-btn">View Report</a>
+                    </div>
+            
+                </div>
+            </div>   
+        
 
         </main>
 
@@ -97,7 +127,7 @@
 
     <!-- ===================== -->
     <!-- JavaScript -->
-    <!-- No D3 on Home page -->
+    <!-- No D3 on about page -->
     <!-- ===================== -->
     <script src="js/script.js"></script>
 
