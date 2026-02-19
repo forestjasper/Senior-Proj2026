@@ -1,0 +1,63 @@
+.visualizer-card {
+    background: #1b1d23;
+    padding: 30px;
+    border-radius: 18px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    margin-top: 30px;
+}
+
+.controls-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.control-select {
+    background: #2a2d36;
+    color: white;
+    border: 1px solid #3c404c;
+    padding: 10px 14px;
+    border-radius: 8px;
+}
+
+.button-group {
+    display: flex;
+    gap: 12px;
+}
+
+.btn {
+    padding: 10px 18px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    transition: 0.2s ease;
+}
+
+.btn-start {
+    background: #caa75e;
+    color: #111;
+}
+
+.btn-pause {
+    background: #8b4f56;
+    color: white;
+}
+
+.btn-reset {
+    background: #2f323d;
+    color: white;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+}
+
+.canvas-box {
+    height: 260px;
+    background: #12141a;
+    border-radius: 12px;
+    padding: 15px;
+}

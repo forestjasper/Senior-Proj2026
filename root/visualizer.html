@@ -1,90 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Character encoding -->
     <meta charset="UTF-8">
-
-    <!-- Makes site responsive on different screen sizes -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualizer</title>
 
-    <!-- Browser tab title -->
-    <title>Algorithm Visualizer</title>
-
-    <!-- ===================== -->
-    <!-- CSS -->
-    <!-- ===================== -->
-
-    <!-- Sidebar / menu layout -->
+    <!-- SAME CSS AS INDEX -->
     <link rel="stylesheet" href="css/menu.css">
-
-    <!-- Global colors, fonts, spacing -->
     <link rel="stylesheet" href="css/main.css">
+
+    <!-- Page-specific styling -->
+    <link rel="stylesheet" href="css/visualizer.css">
 </head>
 
 <body>
 
-    <!-- ===================== -->
-    <!-- Page Layout Wrapper -->
-    <!-- Holds sidebar + main content -->
-    <!-- ===================== -->
-    <div class="layout">
+<div class="layout">
 
-        <!-- ===================== -->
-        <!-- Sidebar Navigation -->
-        <!-- Full-height vertical menu -->
-        <!-- ===================== -->
-        <aside class="sidebar">
+    <!-- Sidebar -->
+    <aside class="sidebar">
 
-            <!-- Project title / logo -->
         <div class="logo">
             <h2 class="logo-top">Algorithm</h2>
             <h2 class="logo-lower">Visualizer</h2>
         </div>
 
-            <!-- Navigation links -->
-            <nav class="nav-links">
-                <a href="index.html">Home</a> <!-- class active indicates which page the user is currently on.-->
-                <a href="algorithms.html">Algorithms</a>
-                <a href="visualizer.html"class ="active">Visualizer</a>
-                <a href="about.html">About</a>
-            </nav>
-        </aside>
+        <nav class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="algorithms.html">Algorithms</a>
+            <a href="visualizer.html" class="active">Visualizer</a>
+            <a href="about.html">About</a>
+        </nav>
+    </aside>
 
-        <header class="site-header">
-            <h1 class="word2"> Visualizer </h1>
-        </header>
+    <!-- SAME HEADER STRUCTURE -->
+    <header class="site-header">
+        <h1 class="word1"> Algorithm </h1>
+        <h1 class="word2"> Visualizer </h1>
+    </header>
 
-        <!-- ===================== -->
-        <!-- Main Page Content -->
-        <!-- Unique to this page -->
-        <!-- ===================== -->
-        <main class="content visualizer-page">
+    <!-- Main Content -->
+    <main class="content">
 
-            <!-- Page heading -->
-            <h1>Nothing here yet</h1> <!-- change color to yellow-->
+        <h1>Bubble Sort</h1>
 
-            <!-- Short intro text -->
-            <p>
-               Come back later to find some algorithm visualizations
-            </p>
-			
-			<!-- gray box for algorithm visulization -->
-			<div class = "visualizer-box">
-				<h2>Algorithm-Visualizer</h2>
-				<p>Visuals will be here</p>
-			
-			</div>
-            
+        <p>
+            Watch the algorithm step through comparisons and swaps.
+        </p>
 
-        </main>
+        <div class="visualizer-card">
 
-    </div>
+            <div class="controls-row">
 
-    <!-- ===================== -->
-    <!-- JavaScript -->
-    <!-- No D3 on Home page -->
-    <!-- ===================== -->
-    <script src="js/script.js"></script>
+                <select id="algorithm-select" class="control-select">
+                    <option value="bubble">Bubble Sort</option>
+                </select>
+
+                <div class="button-group">
+                    <button id="start-btn" class="btn btn-start">Start</button>
+                    <button id="pause-btn" class="btn btn-pause">Pause</button>
+                    <button id="reset-btn" class="btn btn-reset">Reset</button>
+                </div>
+
+            </div>
+
+            <div id="visualizer-canvas" class="canvas-box"></div>
+
+        </div>
+
+    </main>
+
+</div>
+
+<!-- D3 + JS -->
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script src="js/visualizer.js"></script>
 
 </body>
 </html>
