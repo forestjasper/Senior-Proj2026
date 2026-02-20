@@ -57,15 +57,39 @@
                 </select>
 
                 <div class="button-group">
+                    
                     <button id="start-btn" class="btn btn-start">Start</button>
                     <button id="pause-btn" class="btn btn-pause">Pause</button>
                     <button id="reset-btn" class="btn btn-reset">Reset</button>
                 </div>
-
+                <div class="speed-control">
+                    <label for="speed-slider">Speed</label>
+                    <input 
+                        type="range" 
+                        id="speed-slider"
+                        min="1"
+                        max="20"
+                        value="10"
+>
+                </div>
             </div>
 
             <div id="visualizer-canvas" class="canvas-box"></div>
+            <!-- Array Display -->
+            <div class="array-display">
+                <h3>Current Array</h3>
+                <div id="array-values" class="array-values">
+                
+    </div>
+</div>
 
+<!-- Pseudocode Placeholder -->
+<div class="pseudocode-display">
+    <h3>Pseudocode</h3>
+    <div class="pseudocode-box">
+        Pseudocode will appear here.
+    </div>
+</div>
         </div>
 
     </main>

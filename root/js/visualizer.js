@@ -1,5 +1,16 @@
 document.addEventListener("DOMContentLoaded", function () {
+    // Speed slider being connected.
+    let speed = 150; // Default speed
+    const speedSlider = document.getElementById("speed-slider");
 
+    speedSlider.addEventListener("input", function () {
+        const level = parseInt(this.value);
+
+
+        speed = 1000 / level;
+    });
+    
+    const arrayDisplay = document.getElementById("array-values");
     const container = document.getElementById("visualizer-canvas");
     if (!container) return;
 
@@ -11,7 +22,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const height = container.clientHeight;
 
     const barCount = 20;
-    const speed = 150;
+    
 
     let data;
     let i;
@@ -19,19 +30,20 @@ document.addEventListener("DOMContentLoaded", function () {
     let isPlaying = false;
     let timeoutId = null;
 
+    
     const svg = d3.select("#visualizer-canvas")
         .append("svg")
         .attr("width", width)
         .attr("height", height);
-
+    
     const y = d3.scaleLinear()
         .domain([0, 1])
         .range([0, height - 20]);
-
+    // Generating data from the randomly generated array
     function generateData() {
         return Array.from({ length: barCount }, () => Math.random());
     }
-
+    // Using generated array to draw bars for our animation.
     function drawBars() {
         svg.selectAll("rect")
             .data(data)
@@ -43,8 +55,10 @@ document.addEventListener("DOMContentLoaded", function () {
             .attr("y", d => height - y(d))
             .attr("height", d => y(d))
             .attr("fill", "#d4b476");
-    }
 
+            arrayDisplay.textContent = "[ " + data.map(d => d.toFixed(2)).join(", ") + " ]";
+    }
+    // Bubble sort function.
     function bubbleStep() {
 
         if (!isPlaying) return;

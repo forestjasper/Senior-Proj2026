@@ -65,3 +65,40 @@
     border-radius: 12px;
     padding: 10px;
 }
+.array-display {
+    margin-top: 30px;
+}
+
+.array-values {
+    background: #12141a;
+    padding: 15px;
+    border-radius: 10px;
+    font-family: monospace;
+    font-size: 18px;
+    color: #d4b476;
+    margin-top: 10px;
+}
+
+.pseudocode-display {
+    margin-top: 30px;
+}
+
+.pseudocode-box {
+    background: #12141a;
+    padding: 20px;
+    border-radius: 12px;
+    font-family: monospace;
+    color: #aaa;
+    margin-top: 10px;
+}
+.speed-control {
+    display: flex;
+    flex-direction: column;
+    font-size: 14px;
+    color: #aaa;
+}
+
+#speed-slider {
+    margin-top: 6px;
+    cursor: pointer;
+}
