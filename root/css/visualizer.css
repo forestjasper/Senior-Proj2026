@@ -103,3 +103,18 @@
     margin-top: 6px;
     cursor: pointer;
 }
+.bar.compare {
+    background-color: #f39c12 !important; /* Orange */
+}
+
+.bar.swap {
+    background-color: #e74c3c !important; /* Red */
+}
+
+.array-cell.compare {
+    background-color: #f39c12 !important;
+}
+
+.array-cell.swap {
+    background-color: #e74c3c !important;
+}

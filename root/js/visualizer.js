@@ -14,6 +14,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const container = document.getElementById("visualizer-canvas");
     if (!container) return;
 
+    const pseudocodeBox = document.getElementById("pseudocode-box");
     const startBtn = document.getElementById("start-btn");
     const pauseBtn = document.getElementById("pause-btn");
     const resetBtn = document.getElementById("reset-btn");
@@ -31,6 +32,8 @@ document.addEventListener("DOMContentLoaded", function () {
     let originalData;
     let isPlaying = false;
     let timeoutId = null;
+    let comparingIndex = null;
+    let swappingIndex = null;
     
     
     const svg = d3.select("#visualizer-canvas")
@@ -56,9 +59,60 @@ document.addEventListener("DOMContentLoaded", function () {
             .duration(speed)
             .attr("y", d => height - y(d))
             .attr("height", d => y(d))
-            .attr("fill", "#d4b476");
+            .attr("fill", (_, index) => {
+                // Sorted already
+                if (index >= barCount - i) {
+                    return "#8e294f"; 
+                }
+                //  Swapping color 
+                if (swappingIndex !== null &&
+                    (index === swappingIndex || index === swappingIndex + 1)) {
+                    return "#e74c3c";
+                }
+    
+                //  Comparing color
+                if (comparingIndex !== null &&
+                    (index === comparingIndex || index === comparingIndex + 1)) {
+                    return "#f39c12";
+                }
+    
+                return "#d4b476"; // normal
+            });
+            // Array highlight at bottom.
+            arrayDisplay.innerHTML = "";
 
-            arrayDisplay.textContent = "[ " + data.map(d => d.toFixed(2)).join(", ") + " ]";
+            data.forEach((value, index) => {
+            
+                const span = document.createElement("span");
+                span.textContent = value.toFixed(2);
+            
+                span.style.padding = "6px 10px";
+                span.style.margin = "4px";
+                span.style.borderRadius = "6px";
+                span.style.display = "inline-block";
+                span.style.backgroundColor = "#1c1f26";
+
+                // Sorted highlight
+                if (index >= barCount - i) {
+                    span.style.backgroundColor = "#8e294f";
+                    span.style.color = "white";
+                }
+                //  Swapping highlight
+                if (swappingIndex !== null &&
+                    (index === swappingIndex || index === swappingIndex + 1)) {
+                    span.style.backgroundColor = "#e74c3c";
+                    span.style.color = "white";
+                }
+            
+                //  Comparing highlight
+                else if (comparingIndex !== null &&
+                    (index === comparingIndex || index === comparingIndex + 1)) {
+                    span.style.backgroundColor = "#f39c12";
+                    span.style.color = "black";
+                }
+            
+                arrayDisplay.appendChild(span);
+            });
     }
     // Bubble sort function.
     function bubbleStep() {
@@ -68,8 +122,28 @@ document.addEventListener("DOMContentLoaded", function () {
         if (i < barCount) {
 
             if (j < barCount - i - 1) {
+                if (data[j] > data[j + 1]) {
+
+                    pseudocodeBox.textContent =
+                        `Comparing ${data[j].toFixed(2)} and ${data[j + 1].toFixed(2)}. 
+                         ${data[j].toFixed(2)} is larger, so we swap them.`;
+    
+                    [data[j], data[j + 1]] = [data[j + 1], data[j]];
+    
+                } else {
+    
+                    pseudocodeBox.textContent =
+                        `Comparing ${data[j].toFixed(2)} and ${data[j + 1].toFixed(2)}. 
+                         No swap needed.`;
+                }
+
+                comparingIndex = j;
+                swappingIndex = null;
 
                 if (data[j] > data[j + 1]) {
+
+                    swappingIndex = j;
+
                     [data[j], data[j + 1]] = [data[j + 1], data[j]];
                 }
 
@@ -79,12 +153,16 @@ document.addEventListener("DOMContentLoaded", function () {
             } else {
                 j = 0;
                 i++;
+                comparingIndex = null;
+                swappingIndex = null;
             }
 
         } else {
-            data = generateData();
-            i = 0;
-            j = 0;
+            comparingIndex = null;
+            swappingIndex = null;
+            isPlaying = false;
+            pseudocodeBox.textContent = "All data sorted.";
+            return; // stop scheduling more steps
         }
 
         timeoutId = setTimeout(bubbleStep, speed);
