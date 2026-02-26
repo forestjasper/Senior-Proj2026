@@ -17,6 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const startBtn = document.getElementById("start-btn");
     const pauseBtn = document.getElementById("pause-btn");
     const resetBtn = document.getElementById("reset-btn");
+    const newDataBtn = document.getElementById("newdata-btn");
 
     const width = container.clientWidth;
     const height = container.clientHeight;
@@ -27,9 +28,10 @@ document.addEventListener("DOMContentLoaded", function () {
     let data;
     let i;
     let j;
+    let originalData;
     let isPlaying = false;
     let timeoutId = null;
-
+    
     
     const svg = d3.select("#visualizer-canvas")
         .append("svg")
@@ -91,12 +93,25 @@ document.addEventListener("DOMContentLoaded", function () {
     function reset() {
         clearTimeout(timeoutId);
         isPlaying = false;
-        data = generateData();
+    
+        data = [...originalData];  // restore original dataset
         i = 0;
         j = 0;
+    
         drawBars();
     }
-
+    function generateNewData() {
+        clearTimeout(timeoutId);
+        isPlaying = false;
+    
+        originalData = generateData();
+        data = [...originalData];
+    
+        i = 0;
+        j = 0;
+    
+        drawBars();
+    }
     startBtn.addEventListener("click", function () {
         if (!isPlaying) {
             isPlaying = true;
@@ -110,6 +125,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     resetBtn.addEventListener("click", reset);
+    newDataBtn.addEventListener("click", generateNewData);
 
-    reset();
+    generateNewData();
 });
