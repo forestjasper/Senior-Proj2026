@@ -17,6 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const arrayDisplay = document.getElementById("array-values");
     const container = document.getElementById("visualizer-canvas");
     const pseudocodeBox = document.getElementById("pseudocode-box");
+    const algorithmSelect = document.getElementById("algorithm-select");
 
     const startBtn = document.getElementById("start-btn");
     const pauseBtn = document.getElementById("pause-btn");
@@ -32,18 +33,25 @@ document.addEventListener("DOMContentLoaded", function () {
     const barCount = 20;
 
     // ===============================
-    // State Variables
+    // State
     // ===============================
     let data = [];
     let originalData = [];
+
+    // Bubble Sort
     let i = 0;
     let j = 0;
+    let comparingIndex = null;
+    let swappingIndex = null;
+
+    // Linear Search
+    let searchIndex = 0;
+    let searchTarget = null;
+    let foundIndex = null;
+    let checkedIndices = [];
 
     let isPlaying = false;
     let timeoutId = null;
-
-    let comparingIndex = null;
-    let swappingIndex = null;
 
     // ===============================
     // SVG Setup
@@ -58,7 +66,7 @@ document.addEventListener("DOMContentLoaded", function () {
         .range([0, height - 20]);
 
     // ===============================
-    // Generate Random Data
+    // Generate Data
     // ===============================
     function generateData() {
         return Array.from({ length: barCount }, () =>
@@ -67,7 +75,20 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // ===============================
-    // Draw Bars + Array
+    // MASTER DRAW FUNCTION
+    // ===============================
+    function drawVisualization() {
+        svg.selectAll("*").remove();
+
+        if (algorithmSelect.value === "bubble") {
+            drawBars();
+        } else {
+            drawNodes();
+        }
+    }
+
+    // ===============================
+    // Draw Bars (Bubble Sort)
     // ===============================
     function drawBars() {
 
@@ -76,128 +97,176 @@ document.addEventListener("DOMContentLoaded", function () {
             .join("rect")
             .attr("x", (_, index) => index * (width / barCount))
             .attr("width", width / barCount - 2)
-            .transition()
-            .duration(speed)
             .attr("y", d => height - y(d))
             .attr("height", d => y(d))
             .attr("fill", (_, index) => {
 
-                // Sorted region
-                if (i > 0 && index >= barCount - i) {
-                    return "#8e294f"; // purple/red sorted
-                }
+                if (i > 0 && index >= barCount - i) return "#8e294f";
 
-                // Swapping
-                if (
-                    swappingIndex !== null &&
-                    (index === swappingIndex || index === swappingIndex + 1)
-                ) {
-                    return "#e74c3c"; // red
-                }
+                if (swappingIndex !== null &&
+                    (index === swappingIndex || index === swappingIndex + 1))
+                    return "#e74c3c";
 
-                // Comparing
-                if (
-                    comparingIndex !== null &&
-                    (index === comparingIndex || index === comparingIndex + 1)
-                ) {
-                    return "#f39c12"; // orange
-                }
+                if (comparingIndex !== null &&
+                    (index === comparingIndex || index === comparingIndex + 1))
+                    return "#f39c12";
 
-                return "#d4b476"; // default
+                return "#d4b476";
             });
 
-        // ===== Update Array Display =====
+        drawArrayDisplay();
+    }
+
+    // ===============================
+    // Draw Nodes (Linear Search)
+    // ===============================
+    function drawNodes() {
+
+        const spacing = width / data.length;
+
+        svg.selectAll("circle")
+            .data(data)
+            .join("circle")
+            .attr("cx", (_, i) => i * spacing + spacing / 2)
+            .attr("cy", height / 2)
+            .attr("r", 25)
+            .attr("fill", (_, index) => {
+
+                    // Correct (locked)
+                    if (index === foundIndex) return "#8e294f";
+
+                    // Currently checking
+                    if (index === comparingIndex) return "#f39c12";
+
+                    // Checked and wrong
+                    if (checkedIndices.includes(index)) return "#e74c3c";
+
+                    // Not checked yet
+                    return "#d4b476"; // yellow
+            });
+
+        svg.selectAll("text")
+            .data(data)
+            .join("text")
+            .attr("x", (_, i) => i * spacing + spacing / 2)
+            .attr("y", height / 2 + 5)
+            .attr("text-anchor", "middle")
+            .attr("fill", "white")
+            .text(d => d);
+
+        drawArrayDisplay();
+    }
+
+    // ===============================
+    // Array Display (shared)
+    // ===============================
+    function drawArrayDisplay() {
+
         arrayDisplay.innerHTML = "";
-
+    
         data.forEach((value, index) => {
-
+    
             const span = document.createElement("span");
             span.textContent = value;
-
+    
             span.style.padding = "6px 10px";
             span.style.margin = "4px";
             span.style.borderRadius = "6px";
             span.style.display = "inline-block";
-            span.style.cursor = "pointer";
             span.style.backgroundColor = "#1c1f26";
             span.style.color = "white";
-
-            // ===== HIGHLIGHT STATES =====
-            if (i > 0 && index >= data.length - i) {
-                span.style.backgroundColor = "#8e294f";
+            span.style.cursor = "pointer";
+    
+            // ===============================
+            // Bubble Sort Colors
+            // ===============================
+            if (algorithmSelect.value === "bubble") {
+    
+                if (i > 0 && index >= barCount - i) {
+                    span.style.backgroundColor = "#8e294f";
+                }
+    
+                else if (
+                    swappingIndex !== null &&
+                    (index === swappingIndex || index === swappingIndex + 1)
+                ) {
+                    span.style.backgroundColor = "#e74c3c";
+                }
+    
+                else if (
+                    comparingIndex !== null &&
+                    (index === comparingIndex || index === comparingIndex + 1)
+                ) {
+                    span.style.backgroundColor = "#f39c12";
+                }
             }
-            else if (
-                swappingIndex !== null &&
-                (index === swappingIndex || index === swappingIndex + 1)
-            ) {
-                span.style.backgroundColor = "#e74c3c";
+    
+            // ===============================
+            // Linear Search Colors
+            // ===============================
+            else {
+    
+                if (index === foundIndex) {
+                    span.style.backgroundColor = "#8e294f";
+                }
+    
+                else if (index === comparingIndex) {
+                    span.style.backgroundColor = "#f39c12";
+                }
+    
+                else if (checkedIndices.includes(index)) {
+                    span.style.backgroundColor = "#e74c3c";
+                }
             }
-            else if (
-                comparingIndex !== null &&
-                (index === comparingIndex || index === comparingIndex + 1)
-            ) {
-                span.style.backgroundColor = "#f39c12";
-                span.style.color = "black";
-            }
-
-            // ===== CLICK TO EDIT =====
+    
+            // ===============================
+            // Click to Edit
+            // ===============================
             span.addEventListener("click", function () {
-
-                clearTimeout(timeoutId);
-                isPlaying = false;
-
+    
                 const input = document.createElement("input");
+    
                 input.type = "number";
-                input.value = data[index];
                 input.min = 1;
                 input.max = 100;
-                input.style.width = "60px";
-
+                input.value = data[index];
+    
+                input.style.width = "50px";
+                input.style.textAlign = "center";
+    
                 span.replaceWith(input);
                 input.focus();
-
+    
+                function saveValue() {
+    
+                    let newValue = parseInt(input.value);
+    
+                    if (isNaN(newValue)) newValue = data[index];
+                    if (newValue < 1) newValue = 1;
+                    if (newValue > 100) newValue = 100;
+    
+                    data[index] = newValue;
+                    originalData[index] = newValue;
+    
+                    drawVisualization();
+                }
+    
+                input.addEventListener("blur", saveValue);
                 input.addEventListener("keydown", function (e) {
                     if (e.key === "Enter") {
-
-                        const newValue = parseFloat(input.value);
-
-                        if (!isNaN(newValue)) {
-                            // enforcing 1-100 range
-                            if (newValue > 100) newValue = 100;
-                            if (newValue < 1) newValue = 1;
-
-                            data[index] = newValue;
-                            originalData = [...data];
-
-                            // Reset sorting state
-                            i = 0;
-                            j = 0;
-                            comparingIndex = null;
-                            swappingIndex = null;
-
-                            drawBars();
-                        }
+                        saveValue();
                     }
                 });
-
-                input.addEventListener("blur", function () {
-                    drawBars();
-                });
-                
-                }); // CLOSE click handler
-                
-                arrayDisplay.appendChild(span);
-                
-                }); // CLOSE forEach
-                
-                } // CLOSE drawBars
+            });
+    
+            arrayDisplay.appendChild(span);
+        });
+    }
 
     // ===============================
     // Bubble Sort Step
     // ===============================
     function bubbleStep() {
-
-       // if (!isPlaying) return;
 
         if (i < barCount - 1) {
 
@@ -207,27 +276,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 swappingIndex = null;
 
                 if (data[j] > data[j + 1]) {
-
-                    pseudocodeBox.textContent =
-                        `Comparing ${data[j].toFixed(2)} and ${data[j + 1].toFixed(2)}.
-                         ${data[j]} is larger, so we swap them.`;
-
                     swappingIndex = j;
-
-                    // SINGLE correct swap
                     [data[j], data[j + 1]] = [data[j + 1], data[j]];
-
-                } else {
-
-                    pseudocodeBox.textContent =
-                        `Comparing ${data[j].toFixed(2)} and ${data[j + 1].toFixed(2)}.
-                         No swap needed.`;
                 }
 
                 j++;
 
             } else {
-
                 j = 0;
                 i++;
                 comparingIndex = null;
@@ -235,73 +290,141 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
         } else {
-
-            // Sorting complete
-            comparingIndex = null;
-            swappingIndex = null;
             isPlaying = false;
-
             pseudocodeBox.textContent = "All data sorted.";
-            drawBars();
+            drawVisualization();
             return;
         }
 
-        drawBars();
+        drawVisualization();
+
         if (isPlaying) {
             timeoutId = setTimeout(bubbleStep, speed);
-}
+        }
     }
 
     // ===============================
-    // Reset Current Dataset
+    // Linear Search Step
     // ===============================
+    function linearStep() {
+
+    if (searchIndex >= data.length) {
+        pseudocodeBox.textContent = "Value not found.";
+        isPlaying = false;
+        comparingIndex = null;
+        drawVisualization();
+        return;
+    }
+
+    comparingIndex = searchIndex;
+
+    if (data[searchIndex] === searchTarget) {
+
+        foundIndex = searchIndex;
+        pseudocodeBox.textContent =
+            `Found ${searchTarget} at index ${searchIndex}.`;
+        isPlaying = false;
+
+    } else {
+
+        checkedIndices.push(searchIndex); // mark as checked & wrong
+        searchIndex++;
+    }
+
+    drawVisualization();
+
+    if (isPlaying) {
+        timeoutId = setTimeout(linearStep, speed);
+    }
+}
+
     function reset() {
 
         clearTimeout(timeoutId);
         isPlaying = false;
-
+    
         data = [...originalData];
-
+    
         i = 0;
         j = 0;
-
+        searchIndex = 0;
+        searchTarget = null;
+        foundIndex = null;
         comparingIndex = null;
         swappingIndex = null;
-
-        pseudocodeBox.textContent = "Dataset reset.";
-
-        drawBars();
+        checkedIndices = [];   // ✅ ADD THIS
+    
+        drawVisualization();
     }
 
-    // ===============================
-    // Generate New Dataset
-    // ===============================
     function generateNewData() {
 
         clearTimeout(timeoutId);
         isPlaying = false;
-
+    
         originalData = generateData();
         data = [...originalData];
-
+    
         i = 0;
         j = 0;
-
+        searchIndex = 0;
+        searchTarget = null;
+        foundIndex = null;
         comparingIndex = null;
         swappingIndex = null;
-
-        pseudocodeBox.textContent = "New dataset generated.";
-
-        drawBars();
+        checkedIndices = [];   // ✅ ADD THIS
+    
+        drawVisualization();
     }
 
+    resetBtn.addEventListener("click", reset);
+    newDataBtn.addEventListener("click", generateNewData);
+    algorithmSelect.addEventListener("change", function () {
+        
+        // Stop any running animation
+        clearTimeout(timeoutId);
+        isPlaying = false;
+    
+        // Reset algorithm-specific state
+        i = 0;
+        j = 0;
+    
+        searchIndex = 0;
+        searchTarget = null;
+        foundIndex = null;
+    
+        comparingIndex = null;
+        swappingIndex = null;
+        checkedIndices = [];
+        
+        pseudocodeBox.textContent = "";
+    
+        // Immediately redraw in the new format
+        drawVisualization();
+    });
     // ===============================
     // Button Events
     // ===============================
+
     startBtn.addEventListener("click", function () {
-        if (!isPlaying) {
-            isPlaying = true;
+
+        if (isPlaying) return;
+
+        isPlaying = true;
+
+        if (algorithmSelect.value === "bubble") {
             bubbleStep();
+        } else {
+
+            if (searchTarget === null) {
+                searchTarget = parseInt(prompt("Enter value to search (1-100):"));
+            }
+
+            searchIndex = 0;
+            foundIndex = null;
+            checkedIndices = [];
+
+            linearStep();
         }
     });
 
@@ -309,15 +432,22 @@ document.addEventListener("DOMContentLoaded", function () {
         isPlaying = false;
         clearTimeout(timeoutId);
     });
+
     stepBtn.addEventListener("click", function () {
+
         clearTimeout(timeoutId);
         isPlaying = false;
-        bubbleStep();
+
+        if (algorithmSelect.value === "bubble") {
+            bubbleStep();
+        } else {
+
+            if (searchTarget === null) {
+                searchTarget = parseInt(prompt("Enter value to search (1-100):"));
+            }
+
+            linearStep();
+        }
     });
-
-    resetBtn.addEventListener("click", reset);
-    newDataBtn.addEventListener("click", generateNewData);
-
-    // Initial Load
     generateNewData();
 });
