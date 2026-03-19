@@ -92,6 +92,30 @@
     color: #aaa;
     margin-top: 10px;
 }
+
+.pseudocode-line {
+    padding: 3px 6px;
+    border-radius: 6px;
+}
+
+/* Pseudocode, text, comparing */
+.pseudo-compare {
+    background-color: #f39c12;
+    color: black;
+}
+
+/* Pseudocode, text, swap/incorrect */
+.pseudo-swap {
+    background-color: #e74c3c;
+    color: white;
+}
+
+/* Pseudocode, text, sorted/found */
+.pseudo-done {
+    background-color: #8e294f;
+    color: white;
+}
+
 .speed-control {
     display: flex;
     flex-direction: column;
@@ -117,4 +141,22 @@
 
 .array-cell.swap {
     background-color: #e74c3c !important;
+}
+.search-input-container {
+    display: none; /* hidden by default */
+    margin-top: 15px;
+    align-items: center;
+    gap: 10px;
+    color: #aaa;
+    font-family: monospace;
+}
+
+#search-input {
+    background: #2a2d36;
+    color: white;
+    border: 1px solid #3c404c;
+    padding: 6px 10px;
+    border-radius: 6px;
+    width: 80px;
+    text-align: center;
 }

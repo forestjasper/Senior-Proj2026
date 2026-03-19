@@ -24,6 +24,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const resetBtn = document.getElementById("reset-btn");
     const newDataBtn = document.getElementById("newdata-btn");
     const stepBtn = document.getElementById("step-btn");
+    const searchInput = document.getElementById("search-input");
 
     if (!container) return;
 
@@ -31,6 +32,80 @@ document.addEventListener("DOMContentLoaded", function () {
     const height = container.clientHeight;
 
     const barCount = 20;
+	
+
+	// ===============================
+	// Pseudocode templates
+	// ===============================
+	const bubblePseudo = [
+	"Color Key: Yellow indicates comparing",
+	"			Orange indicates swapping",
+	"			Purple indicates data is sorted",
+	"-------------------------------------------------",
+	"procedure bubbleSort(A : list of sortable items)",
+	"n = length(A)",
+	"repeat",
+	"    swapped = false",
+	"    for i = 0 to n - 2 inclusive do",
+	"        if A[i] > A[i + 1] then",
+	"            swap(A[i], A[i + 1])",
+	"            swapped = true",
+	"        end if",
+	"    end for",
+	"    n = n - 1",
+	"until not swapped",
+	"end procedure"
+	];
+
+	const linearPseudo = [
+	"Color Key: Yellow indicates checking value",
+	"			Orange indicates value was checked, not target",
+	"			Purple indicates value was checked, is target",
+	"----------------------------------------------",
+	"procedure linearSearch(A, target)",
+	"for i = 0 to length(A)-1",
+	"    if A[i] == target",
+	"        return i",
+	"    end if",
+	"end for"
+	];
+	
+	// ===============================
+	// Render pseudocode in box
+	// ===============================
+	function renderPseudocode(lines) {
+
+	    pseudocodeBox.innerHTML = "";
+
+	    lines.forEach((line, index) => {
+
+	        const div = document.createElement("div");
+	        div.className = "pseudocode-line";
+	        div.id = "pseudo-" + index;
+	        div.textContent = line;
+
+	        pseudocodeBox.appendChild(div);
+	    });
+	}
+	
+	// ===============================
+	// Highlight line of pseudocode
+	// ===============================
+	function highlightPseudo(lineIndex, className) {
+
+	    const lines = document.querySelectorAll(".pseudocode-line");
+
+	    // Clear previous highlights
+	    lines.forEach(line => {
+	        line.classList.remove("pseudo-compare","pseudo-swap","pseudo-done");
+	    });
+
+	    const target = document.getElementById("pseudo-" + lineIndex);
+
+	    if (target) {
+	        target.classList.add(className);
+	    }
+	}
 
     // ===============================
     // State
@@ -274,9 +349,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 comparingIndex = j;
                 swappingIndex = null;
+				
+				//Change pseudocode line color with compare
+				highlightPseudo(9,"pseudo-compare");
 
                 if (data[j] > data[j + 1]) {
+					
                     swappingIndex = j;
+					
+					//Change pseudocode line color with swap
+					highlightPseudo(10,"pseudo-swap");
+					
                     [data[j], data[j + 1]] = [data[j + 1], data[j]];
                 }
 
@@ -285,13 +368,16 @@ document.addEventListener("DOMContentLoaded", function () {
             } else {
                 j = 0;
                 i++;
+				
+				//Change pseudocode line color when sorted
+				highlightPseudo(14,"pseudo-done");
+				
                 comparingIndex = null;
                 swappingIndex = null;
             }
 
         } else {
             isPlaying = false;
-            pseudocodeBox.textContent = "All data sorted.";
             drawVisualization();
             return;
         }
@@ -306,37 +392,50 @@ document.addEventListener("DOMContentLoaded", function () {
     // ===============================
     // Linear Search Step
     // ===============================
-    function linearStep() {
+	function linearStep() {
 
-    if (searchIndex >= data.length) {
-        pseudocodeBox.textContent = "Value not found.";
-        isPlaying = false;
-        comparingIndex = null;
-        drawVisualization();
-        return;
-    }
+	    if (searchIndex >= data.length) {
+	        isPlaying = false;
+	        comparingIndex = null;
+	        drawVisualization();
+	        return;
+	    }
 
-    comparingIndex = searchIndex;
+	    comparingIndex = searchIndex;
 
-    if (data[searchIndex] === searchTarget) {
+		//Change pseudocode line color with check
+	    highlightPseudo(6,"pseudo-compare");
 
-        foundIndex = searchIndex;
-        pseudocodeBox.textContent =
-            `Found ${searchTarget} at index ${searchIndex}.`;
-        isPlaying = false;
+	    drawVisualization();
 
-    } else {
+	    //Delay evaluation slightly so compare is visible
+	    setTimeout(() => {
 
-        checkedIndices.push(searchIndex); // mark as checked & wrong
-        searchIndex++;
-    }
+	        if (data[searchIndex] === searchTarget) {
 
-    drawVisualization();
+	            foundIndex = searchIndex;
 
-    if (isPlaying) {
-        timeoutId = setTimeout(linearStep, speed);
-    }
-}
+	            highlightPseudo(7,"pseudo-done");
+
+	            isPlaying = false;
+
+	        } else {
+
+	            checkedIndices.push(searchIndex);
+
+	            highlightPseudo(6,"pseudo-swap");
+
+	            searchIndex++;
+	        }
+
+	        drawVisualization();
+
+	        if (isPlaying) {
+	            timeoutId = setTimeout(linearStep, speed);
+	        }
+
+	    }, speed/2);
+	}
 
     function reset() {
 
@@ -352,8 +451,8 @@ document.addEventListener("DOMContentLoaded", function () {
         foundIndex = null;
         comparingIndex = null;
         swappingIndex = null;
-        checkedIndices = [];   // ✅ ADD THIS
-    
+        checkedIndices = [];   
+        searchInput.value = "";
         drawVisualization();
     }
 
@@ -372,20 +471,18 @@ document.addEventListener("DOMContentLoaded", function () {
         foundIndex = null;
         comparingIndex = null;
         swappingIndex = null;
-        checkedIndices = [];   // ✅ ADD THIS
-    
+        checkedIndices = [];   
+        searchInput.value = "";
         drawVisualization();
     }
 
     resetBtn.addEventListener("click", reset);
     newDataBtn.addEventListener("click", generateNewData);
     algorithmSelect.addEventListener("change", function () {
-        
-        // Stop any running animation
+    
         clearTimeout(timeoutId);
         isPlaying = false;
     
-        // Reset algorithm-specific state
         i = 0;
         j = 0;
     
@@ -396,10 +493,25 @@ document.addEventListener("DOMContentLoaded", function () {
         comparingIndex = null;
         swappingIndex = null;
         checkedIndices = [];
-        
-        pseudocodeBox.textContent = "";
     
-        // Immediately redraw in the new format
+        const searchContainer = document.querySelector(".search-input-container");
+    
+        if (algorithmSelect.value === "bubble") {
+    
+            renderPseudocode(bubblePseudo);
+    
+            // hide input
+            searchContainer.style.display = "none";
+            searchInput.value = "";
+    
+        } else {
+    
+            renderPseudocode(linearPseudo);
+    
+            // show input
+            searchContainer.style.display = "flex";
+        }
+    
         drawVisualization();
     });
     // ===============================
@@ -417,7 +529,18 @@ document.addEventListener("DOMContentLoaded", function () {
         } else {
 
             if (searchTarget === null) {
-                searchTarget = parseInt(prompt("Enter value to search (1-100):"));
+
+                let value = parseInt(searchInput.value);
+            
+                if (isNaN(value)) {
+                    alert("Please enter a value between 1 and 100.");
+                    return;
+                }
+            
+                if (value < 1) value = 1;
+                if (value > 100) value = 100;
+            
+                searchTarget = value;
             }
 
             searchIndex = 0;
@@ -443,11 +566,26 @@ document.addEventListener("DOMContentLoaded", function () {
         } else {
 
             if (searchTarget === null) {
-                searchTarget = parseInt(prompt("Enter value to search (1-100):"));
+
+                let value = parseInt(searchInput.value);
+            
+                if (isNaN(value)) {
+                    alert("Please enter a value between 1 and 100.");
+                    return;
+                }
+            
+                if (value < 1) value = 1;
+                if (value > 100) value = 100;
+            
+                searchTarget = value;
             }
 
             linearStep();
         }
     });
+	
+	renderPseudocode(bubblePseudo);
+    const searchContainer = document.querySelector(".search-input-container");
+    searchContainer.style.display = "none"; // default = bubble
     generateNewData();
 });
