@@ -42,9 +42,9 @@
     <!-- Main Content -->
     <main class="content">
 
-        <h1>Bubble Sort</h1>
+        <h1 id="algorithm-title">Bubble Sort</h1>
 
-        <p>
+        <p id="algorithm-description">
             Watch the algorithm step through comparisons and swaps.
         </p>
 
@@ -55,6 +55,7 @@
                 <select id="algorithm-select" class="control-select">
                     <option value="bubble">Bubble Sort</option>
                     <option value="linear">Linear Search</option>
+                    <option value="dijkstra">Dijkstra (Shortest Path)</option>
                 </select>
 
                 <div class="button-group">
@@ -64,45 +65,55 @@
                     <button id="newdata-btn" class="btn btn-reset">New Data</button>
                     <button id="reset-btn" class="btn btn-reset">Reset</button>
                 </div>
+
                 <div class="speed-control">
                     <label for="speed-slider">Speed</label>
-                    <input 
-                        type="range" 
+                    <input
+                        type="range"
                         id="speed-slider"
                         min="1"
                         max="20"
                         value="10"
->
+                    >
                 </div>
             </div>
 
             <div id="visualizer-canvas" class="canvas-box"></div>
+
             <!-- Array Display -->
             <div class="array-display">
-                <h3>Current Array</h3>
-                <div id="array-values" class="array-values">
-                
-    </div>
-</div>
-<div class="search-input-container">
-    <label for="search-input">Search Value:</label>
-    <input 
-        type="number" 
-        id="search-input" 
-        min="1" 
-        max="100" 
-        placeholder="1 - 100"
-    >
-</div>
-<!-- Pseudocode Placeholder -->
-<div class="pseudocode-display">
-    <h3>Pseudocode</h3>
-    <div class="pseudocode-box" id="pseudocode-box">
-        
-        <!-- pseudocode content portion purposely empty for dynamically changing content -->
-        
-    </div>
-</div>
+                <h3 id="array-display-title">Current Array</h3>
+                <div id="array-values" class="array-values"></div>
+            </div>
+
+            <div class="search-input-container">
+                <label for="search-input" id="search-input-label">Search Value:</label>
+                <input
+                    type="number"
+                    id="search-input"
+                    min="1"
+                    max="100"
+                    placeholder="1 - 100"
+                >
+            </div>
+
+            <div class="search-input-container" id="edge-editor" style="display:none;">
+                <label for="edge-from">Edge:</label>
+                <input type="text" id="edge-from" placeholder="A" maxlength="1" style="width:52px;text-transform:uppercase;">
+                <span>-</span>
+                <input type="text" id="edge-to" placeholder="B" maxlength="1" style="width:52px;text-transform:uppercase;">
+                <label for="edge-weight">Weight:</label>
+                <input type="number" id="edge-weight" min="0" max="99" placeholder="0-99" style="width:82px;">
+                <button id="apply-edge-btn" class="btn btn-reset" type="button">Apply Edge</button>
+            </div>
+
+            <!-- Pseudocode Placeholder -->
+            <div class="pseudocode-display">
+                <h3>Pseudocode</h3>
+                <div class="pseudocode-box" id="pseudocode-box">
+                    <!-- pseudocode content portion purposely empty for dynamically changing content -->
+                </div>
+            </div>
         </div>
 
     </main>
@@ -115,3 +126,4 @@
 
 </body>
 </html>
+
