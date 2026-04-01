@@ -140,7 +140,8 @@ a:link {
 
 
 .reports-row {
-display: flex;
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 gap: 30px;
 justify-content: center;
 width: 100%;
