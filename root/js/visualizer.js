@@ -27,6 +27,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const barCount = 20;
     const matrixSize = 6;
+    const dfsNodeCount = 8;
 
     const bubblePseudo = [
         "Color Key: Yellow indicates comparing",
@@ -78,6 +79,20 @@ document.addEventListener("DOMContentLoaded", function () {
         "    mark u as visited",
         "end procedure"
     ];
+    const dfsPseudo = [
+        "Color Key: Yellow = current node",
+        "           Orange = active edge/neighbor",
+        "           Purple = visited",
+        "--------------------------------------",
+        "procedure DFS(node)",
+        "    mark node as visited",
+        "    for each neighbor v of node",
+        "        if v not visited",
+        "            traverse edge(node, v)",
+        "            DFS(v)",
+        "        end if",
+        "end procedure"
+    ];
 
     function renderPseudocode(lines) {
         pseudocodeBox.innerHTML = "";
@@ -126,6 +141,17 @@ document.addEventListener("DOMContentLoaded", function () {
     let neighborIndex = 0;
     let activeNeighbor = null;
     let dijkstraFinished = false;
+
+    let dfsTree = null;
+    let dfsStartNode = null;
+    let dfsStack = [];
+    let dfsVisited = [];
+    let dfsTraversalOrder = [];
+    let dfsCurrent = null;
+    let dfsCurrentNeighbor = null;
+    let dfsActiveEdge = null;
+    let dfsTraversedEdges = [];
+    let dfsFinished = false;
 
     let isPlaying = false;
     let timeoutId = null;
@@ -240,6 +266,87 @@ document.addEventListener("DOMContentLoaded", function () {
 
         return minNode;
     }
+    function getDFSEdgeKey(source, target) {
+        return source < target ? `${source}-${target}` : `${target}-${source}`;
+    }
+
+    function generateDFSTree(size) {
+        const children = Array.from({ length: size }, () => []);
+        const adjacency = Array.from({ length: size }, () => []);
+        const edges = [];
+
+        for (let node = 1; node < size; node++) {
+            const parent = Math.floor(Math.random() * node);
+            children[parent].push(node);
+            adjacency[parent].push(node);
+            adjacency[node].push(parent);
+            edges.push({ source: parent, target: node });
+        }
+
+        adjacency.forEach((neighbors) => neighbors.sort((a, b) => a - b));
+
+        const positions = Array(size).fill(null);
+        let leafCount = 0;
+        let maxDepth = 0;
+
+        function assignPosition(node, depth) {
+            maxDepth = Math.max(maxDepth, depth);
+
+            if (children[node].length === 0) {
+                positions[node] = { leafX: leafCount, depth };
+                leafCount += 1;
+                return positions[node].leafX;
+            }
+
+            const childCenters = children[node].map((child) => assignPosition(child, depth + 1));
+            const center = (childCenters[0] + childCenters[childCenters.length - 1]) / 2;
+            positions[node] = { leafX: center, depth };
+            return center;
+        }
+
+        assignPosition(0, 0);
+
+        return {
+            nodeCount: size,
+            root: 0,
+            children,
+            adjacency,
+            edges,
+            positions,
+            leafCount: Math.max(leafCount, 1),
+            maxDepth
+        };
+    }
+
+    function resetDFSState() {
+        const nodeCount = dfsTree ? dfsTree.nodeCount : dfsNodeCount;
+        dfsStartNode = null;
+        dfsStack = [];
+        dfsVisited = Array(nodeCount).fill(false);
+        dfsTraversalOrder = [];
+        dfsCurrent = null;
+        dfsCurrentNeighbor = null;
+        dfsActiveEdge = null;
+        dfsTraversedEdges = [];
+        dfsFinished = false;
+    }
+
+    function initializeDFS() {
+        if (dfsStartNode !== null || dfsStack.length > 0) return true;
+
+        const start = parseSourceNodeLabel(searchInput.value);
+        if (start === -1 || start >= dfsNodeCount) {
+            alert(`Enter node A-${getNodeLabel(dfsNodeCount - 1)}`);
+            return false;
+        }
+
+        dfsStartNode = start;
+        dfsStack = [{ node: start, parent: null, nextNeighborIndex: 0 }];
+        searchInput.value = getNodeLabel(start);
+        drawVisualization();
+        return true;
+    }
+
     function setAlgorithmHeader() {
         if (!algorithmTitle || !algorithmDescription || !arrayDisplayTitle) return;
 
@@ -251,6 +358,10 @@ document.addEventListener("DOMContentLoaded", function () {
             algorithmTitle.textContent = "Linear Search";
             algorithmDescription.textContent = "Check each value one-by-one until the target is found.";
             arrayDisplayTitle.textContent = "Current Array";
+        } else if (algorithmSelect.value === "dfs") {
+            algorithmTitle.textContent = "Depth First Search";
+            algorithmDescription.textContent = "Traverse a tree of nodes depth-first and highlight the active edges as the search moves.";
+            arrayDisplayTitle.textContent = "Traversal Order";
         } else {
             algorithmTitle.textContent = "Dijkstra (Shortest Path)";
             algorithmDescription.textContent = "Traverse an adjacency matrix and graph view together to build shortest distances from a source node.";
@@ -265,6 +376,8 @@ document.addEventListener("DOMContentLoaded", function () {
             drawBars();
         } else if (algorithmSelect.value === "linear") {
             drawNodes();
+        }else if (algorithmSelect.value === "dfs") {
+            drawDFSGraph();
         } else {
             drawDijkstraViews();
         }
@@ -522,7 +635,7 @@ document.addEventListener("DOMContentLoaded", function () {
             .attr("fill", "#d5d9e2")
             .style("font-family", "monospace")
             .style("font-size", "11px")
-            .style("pointer-events", "none") // 🔥 FIX
+            .style("pointer-events", "none") 
             .text((d) => d.weight);
 
         svg.selectAll(".graph-node")
@@ -541,7 +654,7 @@ document.addEventListener("DOMContentLoaded", function () {
             })
             .attr("stroke", (d) => (d.idx === sourceIndex ? "#ffffff" : "#2e3442"))
             .attr("stroke-width", (d) => (d.idx === sourceIndex ? 2 : 1))
-            .style("pointer-events", "none"); // 🔥 FIX
+            .style("pointer-events", "none"); 
 
         svg.selectAll(".graph-node-label")
             .data(graphNodes)
@@ -554,10 +667,88 @@ document.addEventListener("DOMContentLoaded", function () {
             .style("font-family", "monospace")
             .style("font-size", "12px")
             .style("font-weight", "700")
-            .style("pointer-events", "none") // 🔥 FIX
+            .style("pointer-events", "none") 
             .text((d) => d.label);
     }
+    function drawDFSGraph() {
+        if (!dfsTree) {
+            drawArrayDisplay();
+            return;
+        }
 
+        const paddingX = 50;
+        const paddingTop = 36;
+        const paddingBottom = 30;
+        const usableWidth = width - paddingX * 2;
+        const usableHeight = height - paddingTop - paddingBottom;
+        const leafDenominator = Math.max(dfsTree.leafCount - 1, 1);
+        const depthDenominator = Math.max(dfsTree.maxDepth, 1);
+
+        const positionedNodes = dfsTree.positions.map((position, index) => {
+            const x = dfsTree.leafCount === 1
+                ? width / 2
+                : paddingX + (position.leafX / leafDenominator) * usableWidth;
+            const y = dfsTree.maxDepth === 0
+                ? height / 2
+                : paddingTop + (position.depth / depthDenominator) * usableHeight;
+
+            return { idx: index, label: getNodeLabel(index), x, y };
+        });
+
+        const nodeMap = Object.fromEntries(positionedNodes.map((node) => [node.idx, node]));
+
+        svg.selectAll(".dfs-edge")
+            .data(dfsTree.edges)
+            .join("line")
+            .attr("class", "dfs-edge")
+            .attr("x1", (d) => nodeMap[d.source].x)
+            .attr("y1", (d) => nodeMap[d.source].y)
+            .attr("x2", (d) => nodeMap[d.target].x)
+            .attr("y2", (d) => nodeMap[d.target].y)
+            .attr("stroke", (d) => {
+                const edgeKey = getDFSEdgeKey(d.source, d.target);
+                const activeKey = dfsActiveEdge ? getDFSEdgeKey(dfsActiveEdge.source, dfsActiveEdge.target) : null;
+                if (activeKey === edgeKey) return "#e67e22";
+                if (dfsTraversedEdges.includes(edgeKey)) return "#8e294f";
+                return "#6f7689";
+            })
+            .attr("stroke-width", (d) => {
+                const edgeKey = getDFSEdgeKey(d.source, d.target);
+                const activeKey = dfsActiveEdge ? getDFSEdgeKey(dfsActiveEdge.source, dfsActiveEdge.target) : null;
+                return activeKey === edgeKey ? 4 : 2.5;
+            });
+
+        svg.selectAll(".dfs-node")
+            .data(positionedNodes)
+            .join("circle")
+            .attr("class", "dfs-node")
+            .attr("cx", (d) => d.x)
+            .attr("cy", (d) => d.y)
+            .attr("r", 20)
+            .attr("fill", (d) => {
+                if (d.idx === dfsCurrent) return "#f39c12";
+                if (d.idx === dfsCurrentNeighbor) return "#e67e22";
+                if (dfsVisited[d.idx]) return "#8e294f";
+                return "#d4b476";
+            })
+            .attr("stroke", "#2e3442")
+            .attr("stroke-width", 1.5);
+
+        svg.selectAll(".dfs-label")
+            .data(positionedNodes)
+            .join("text")
+            .attr("class", "dfs-label")
+            .attr("x", (d) => d.x)
+            .attr("y", (d) => d.y + 5)
+            .attr("text-anchor", "middle")
+            .attr("fill", "#111")
+            .style("font-family", "monospace")
+            .style("font-size", "12px")
+            .style("font-weight", "700")
+            .text((d) => d.label);
+
+        drawArrayDisplay();
+    }
     function drawArrayDisplay() {
         arrayDisplay.innerHTML = "";
 
@@ -587,6 +778,40 @@ document.addEventListener("DOMContentLoaded", function () {
             });
             return;
         }
+
+        if (algorithmSelect.value === "dfs") {
+            if (dfsTraversalOrder.length === 0) {
+                const span = document.createElement("span");
+                span.textContent = "Traversal will appear here.";
+                span.style.color = "#aaa";
+                span.style.fontFamily = "monospace";
+                arrayDisplay.appendChild(span);
+                return;
+            }
+
+            dfsTraversalOrder.forEach((nodeIndex) => {
+                const span = document.createElement("span");
+                span.textContent = getNodeLabel(nodeIndex);
+                span.style.padding = "6px 10px";
+                span.style.margin = "4px";
+                span.style.borderRadius = "6px";
+                span.style.display = "inline-block";
+                span.style.backgroundColor = "#8e294f";
+                span.style.color = "white";
+                span.style.fontFamily = "monospace";
+
+                if (nodeIndex === dfsCurrent) {
+                    span.style.backgroundColor = "#f39c12";
+                    span.style.color = "black";
+                } else if (nodeIndex === dfsCurrentNeighbor) {
+                    span.style.backgroundColor = "#e67e22";
+                }
+
+                arrayDisplay.appendChild(span);
+            });
+            return;
+        }
+
         data.forEach((value, index) => {
             const span = document.createElement("span");
             span.textContent = value;
@@ -774,6 +999,74 @@ document.addEventListener("DOMContentLoaded", function () {
         drawVisualization();
         if (isPlaying) timeoutId = setTimeout(dijkstraStep, speed);
     }
+    function dfsStep() {
+        if (dfsFinished) {
+            isPlaying = false;
+            drawVisualization();
+            return;
+        }
+
+        if (dfsStack.length === 0) {
+            dfsFinished = true;
+            dfsCurrent = null;
+            dfsCurrentNeighbor = null;
+            dfsActiveEdge = null;
+            highlightPseudo(11, "pseudo-done");
+            isPlaying = false;
+            drawVisualization();
+            return;
+        }
+
+        const frame = dfsStack[dfsStack.length - 1];
+        dfsCurrent = frame.node;
+
+        if (!dfsVisited[frame.node]) {
+            dfsVisited[frame.node] = true;
+            dfsTraversalOrder.push(frame.node);
+            highlightPseudo(5, "pseudo-done");
+            drawVisualization();
+            if (isPlaying) timeoutId = setTimeout(dfsStep, speed);
+            return;
+        }
+
+        const neighbors = dfsTree.adjacency[frame.node];
+        if (frame.nextNeighborIndex < neighbors.length) {
+            const neighbor = neighbors[frame.nextNeighborIndex];
+            frame.nextNeighborIndex += 1;
+            dfsCurrentNeighbor = neighbor;
+            dfsActiveEdge = { source: frame.node, target: neighbor };
+            highlightPseudo(6, "pseudo-compare");
+
+            if (!dfsVisited[neighbor]) {
+                dfsTraversedEdges.push(getDFSEdgeKey(frame.node, neighbor));
+                highlightPseudo(8, "pseudo-swap");
+                dfsStack.push({ node: neighbor, parent: frame.node, nextNeighborIndex: 0 });
+            }
+
+            drawVisualization();
+            if (isPlaying) timeoutId = setTimeout(dfsStep, speed);
+            return;
+        }
+
+        dfsStack.pop();
+        dfsCurrentNeighbor = frame.parent;
+        dfsActiveEdge = frame.parent !== null ? { source: frame.parent, target: frame.node } : null;
+
+        if (dfsStack.length === 0) {
+            dfsFinished = true;
+            dfsCurrent = null;
+            dfsCurrentNeighbor = null;
+            dfsActiveEdge = null;
+            highlightPseudo(11, "pseudo-done");
+            isPlaying = false;
+        } else {
+            dfsCurrent = dfsStack[dfsStack.length - 1].node;
+            highlightPseudo(10, "pseudo-done");
+        }
+
+        drawVisualization();
+        if (isPlaying) timeoutId = setTimeout(dfsStep, speed);
+    }
 
     function initializeLinearTarget() {
         if (searchTarget !== null) return true;
@@ -826,9 +1119,12 @@ document.addEventListener("DOMContentLoaded", function () {
     function reset() {
         resetSharedState();
         clearPseudoHighlight();
+
         if (algorithmSelect.value === "dijkstra") {
             matrixData = deepCopyMatrix(originalMatrix);
             resetDijkstraState();
+        } else if (algorithmSelect.value === "dfs") {
+            resetDFSState();
         } else {
             data = [...originalData];
         }
@@ -845,6 +1141,9 @@ document.addEventListener("DOMContentLoaded", function () {
             matrixData = generateMatrixData(matrixSize);
             originalMatrix = deepCopyMatrix(matrixData);
             resetDijkstraState();
+        } else if (algorithmSelect.value === "dfs") {
+            dfsTree = generateDFSTree(dfsNodeCount);
+            resetDFSState();
         } else {
             originalData = generateData();
             data = [...originalData];
@@ -855,8 +1154,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function applyAlgorithmMode() {
-       document.getElementById("edge-editor").style.display = "none";
-       clearPseudoHighlight();
+        document.getElementById("edge-editor").style.display = "none";
+        clearPseudoHighlight();
         clearTimeout(timeoutId);
         isPlaying = false;
 
@@ -887,6 +1186,24 @@ document.addEventListener("DOMContentLoaded", function () {
             searchInput.min = "1";
             searchInput.max = "100";
             searchInput.placeholder = "1 - 100";
+            drawVisualization();
+            return;
+        }
+
+        if (algorithmSelect.value === "dfs") {
+            renderPseudocode(dfsPseudo);
+            searchContainer.style.display = "flex";
+            searchInputLabel.textContent = `Start Node (A-${getNodeLabel(dfsNodeCount - 1)}):`;
+            searchInput.type = "text";
+            searchInput.removeAttribute("min");
+            searchInput.removeAttribute("max");
+            searchInput.placeholder = `A - ${getNodeLabel(dfsNodeCount - 1)}`;
+
+            if (!dfsTree) {
+                dfsTree = generateDFSTree(dfsNodeCount);
+            }
+
+            resetDFSState();
             drawVisualization();
             return;
         }
@@ -940,6 +1257,12 @@ document.addEventListener("DOMContentLoaded", function () {
     startBtn.addEventListener("click", function () {
         if (isPlaying) return;
 
+        if (algorithmSelect.value === "dfs") {
+            if (!initializeDFS()) return;
+            isPlaying = true;
+            dfsStep();
+            return;
+        }
         if (algorithmSelect.value === "bubble") {
             isPlaying = true;
             bubbleStep();
@@ -973,6 +1296,11 @@ document.addEventListener("DOMContentLoaded", function () {
         clearTimeout(timeoutId);
         isPlaying = false;
 
+        if (algorithmSelect.value === "dfs") {
+            if (!initializeDFS()) return;
+            dfsStep();
+            return;
+        }
         if (algorithmSelect.value === "bubble") {
             bubbleStep();
             return;
@@ -997,7 +1325,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     matrixData = generateMatrixData(matrixSize);
     originalMatrix = deepCopyMatrix(matrixData);
+    dfsTree = generateDFSTree(dfsNodeCount);
     resetDijkstraState();
+    resetDFSState();
 
     drawVisualization();
 });
