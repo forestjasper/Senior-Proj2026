@@ -160,3 +160,13 @@
     width: 80px;
     text-align: center;
 }
+.edge-help {
+    font-size: 13px;
+    color: #e5e2dc;
+    background-color: #1c1f26;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #3a3a40;
+    margin-top: 10px;
+    line-height: 1.4;
+  }

@@ -552,7 +552,13 @@ document.addEventListener("DOMContentLoaded", function () {
             .style("font-weight", "600")
             .style("font-size", "12px")
             .text((label) => label);
-
+        svg.append("text")
+            .attr("x", leftPanelX + 12)               // align with left edge of matrix
+            .attr("y", panelY + 30)                   // just above or near the matrix
+            .attr("fill", "#aaa")                      // subtle color
+            .style("font-size", "11px")
+            .style("font-family", "monospace")
+            .text("0 = no edge, INF = no connection");
         drawDijkstraGraph(rightPanelX, panelY, panelWidth, panelHeight, n);
         drawArrayDisplay();
     }

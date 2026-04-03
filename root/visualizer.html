@@ -97,8 +97,22 @@
                     placeholder="1 - 100"
                 >
             </div>
-
+            
             <div class="search-input-container" id="edge-editor" style="display:none;">
+                <div class="edge-help">
+                    <strong>Editing Edges:</strong><br>
+                    • Click a matrix cell or graph edge to edit its weight.<br>
+                    • Enter a value from 0–99 and press Apply.<br><br>
+                  
+                    <strong>Edge Weights:</strong><br>
+                    • A value of <b>0</b> means no edge exists between nodes.<br>
+                    • <b>INF</b> represents no connection (unreachable nodes).<br><br>
+                  
+                    <strong>Tips:</strong><br>
+                    • Set weight to 0 to remove an edge.<br>
+                    • Any value greater than 0 creates or updates an edge.<br>
+                  </div>
+                  
                 <label for="edge-from">Edge:</label>
                 <input type="text" id="edge-from" placeholder="A" maxlength="1" style="width:52px;text-transform:uppercase;">
                 <span>-</span>

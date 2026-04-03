@@ -138,7 +138,9 @@ a:link {
   color: #fce9c4;
 }
 
-
+a:visited {
+  color:  #fce9c4;
+}
 .reports-row {
 display: grid;
 grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -255,4 +257,17 @@ padding: 20px;
   border-radius: 12px;
   padding: 10px;
   box-sizing: border-box;
+}
+.resources-header {
+  margin-top: 40px;
+  border-top: 2px solid #444;
+  padding-top: 10px;
+}
+
+.algorithm-category-header {
+  margin-top: 35px;
+}
+
+.algorithm-header {
+  margin-top: 30px;
 }
