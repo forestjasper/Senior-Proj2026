@@ -153,6 +153,9 @@ document.addEventListener("DOMContentLoaded", function () {
     let dfsTraversedEdges = [];
     let dfsFinished = false;
 
+    let dfsTarget = null;
+    let dfsFound = false;
+
     let isPlaying = false;
     let timeoutId = null;
 
@@ -274,38 +277,52 @@ document.addEventListener("DOMContentLoaded", function () {
         const children = Array.from({ length: size }, () => []);
         const adjacency = Array.from({ length: size }, () => []);
         const edges = [];
-
-        for (let node = 1; node < size; node++) {
-            const parent = Math.floor(Math.random() * node);
-            children[parent].push(node);
-            adjacency[parent].push(node);
-            adjacency[node].push(parent);
-            edges.push({ source: parent, target: node });
+    
+        let currentIndex = 1;
+    
+        // Define how many children each node can have (adjustable)
+        const maxChildren = 3;
+    
+        for (let parent = 0; parent < size && currentIndex < size; parent++) {
+            let childCount = Math.floor(Math.random() * maxChildren) + 1;
+    
+            for (let i = 0; i < childCount && currentIndex < size; i++) {
+                const child = currentIndex++;
+    
+                children[parent].push(child);
+    
+                adjacency[parent].push(child);
+                adjacency[child].push(parent);
+    
+                edges.push({ source: parent, target: child });
+            }
         }
-
-        adjacency.forEach((neighbors) => neighbors.sort((a, b) => a - b));
-
+    
+        adjacency.forEach(neighbors => neighbors.sort((a, b) => a - b));
+    
+        // Positioning logic (same as yours)
         const positions = Array(size).fill(null);
         let leafCount = 0;
         let maxDepth = 0;
-
+    
         function assignPosition(node, depth) {
             maxDepth = Math.max(maxDepth, depth);
-
+    
             if (children[node].length === 0) {
                 positions[node] = { leafX: leafCount, depth };
-                leafCount += 1;
+                leafCount++;
                 return positions[node].leafX;
             }
-
-            const childCenters = children[node].map((child) => assignPosition(child, depth + 1));
-            const center = (childCenters[0] + childCenters[childCenters.length - 1]) / 2;
+    
+            const centers = children[node].map(child => assignPosition(child, depth + 1));
+            const center = (centers[0] + centers[centers.length - 1]) / 2;
+    
             positions[node] = { leafX: center, depth };
             return center;
         }
-
+    
         assignPosition(0, 0);
-
+    
         return {
             nodeCount: size,
             root: 0,
@@ -329,20 +346,27 @@ document.addEventListener("DOMContentLoaded", function () {
         dfsActiveEdge = null;
         dfsTraversedEdges = [];
         dfsFinished = false;
+
+        dfsTarget = null;  
+        dfsFound = false;
     }
 
     function initializeDFS() {
-        if (dfsStartNode !== null || dfsStack.length > 0) return true;
-
-        const start = parseSourceNodeLabel(searchInput.value);
-        if (start === -1 || start >= dfsNodeCount) {
+        if (dfsTarget !== null) return true;
+    
+        const target = parseSourceNodeLabel(searchInput.value);
+        if (target === -1 || target >= dfsNodeCount) {
             alert(`Enter node A-${getNodeLabel(dfsNodeCount - 1)}`);
             return false;
         }
-
-        dfsStartNode = start;
-        dfsStack = [{ node: start, parent: null, nextNeighborIndex: 0 }];
-        searchInput.value = getNodeLabel(start);
+    
+        dfsTarget = target;
+    
+        // Always start DFS from root (A / 0)
+        dfsStartNode = 0;
+        dfsStack = [{ node: dfsStartNode, parent: null, nextNeighborIndex: 0 }];
+    
+        searchInput.value = getNodeLabel(target);
         drawVisualization();
         return true;
     }
@@ -732,13 +756,21 @@ document.addEventListener("DOMContentLoaded", function () {
             .attr("cy", (d) => d.y)
             .attr("r", 20)
             .attr("fill", (d) => {
+                if (d.idx === dfsTarget && dfsFound) return "#2ecc71";
                 if (d.idx === dfsCurrent) return "#f39c12";
                 if (d.idx === dfsCurrentNeighbor) return "#e67e22";
                 if (dfsVisited[d.idx]) return "#8e294f";
                 return "#d4b476";
             })
-            .attr("stroke", "#2e3442")
-            .attr("stroke-width", 1.5);
+            .attr("stroke", (d) => {
+                if (d.idx === dfsTarget) return "#ffffff"; //  target highlight
+                return "#2e3442";
+            })
+            .attr("stroke-width", (d) => {
+                if (dfsTarget !== null && d.idx === dfsTarget)
+                return 1.5;
+            });
+            
 
         svg.selectAll(".dfs-label")
             .data(positionedNodes)
@@ -1030,6 +1062,14 @@ document.addEventListener("DOMContentLoaded", function () {
             dfsVisited[frame.node] = true;
             dfsTraversalOrder.push(frame.node);
             highlightPseudo(5, "pseudo-done");
+            if (frame.node === dfsTarget) {
+                dfsFound = true;
+                dfsFinished = true;
+                isPlaying = false;
+                drawVisualization();
+                return;
+            }
+        
             drawVisualization();
             if (isPlaying) timeoutId = setTimeout(dfsStep, speed);
             return;
@@ -1199,7 +1239,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (algorithmSelect.value === "dfs") {
             renderPseudocode(dfsPseudo);
             searchContainer.style.display = "flex";
-            searchInputLabel.textContent = `Start Node (A-${getNodeLabel(dfsNodeCount - 1)}):`;
+            searchInputLabel.textContent = `Target Node (A-${getNodeLabel(dfsNodeCount - 1)}):`;
             searchInput.type = "text";
             searchInput.removeAttribute("min");
             searchInput.removeAttribute("max");
