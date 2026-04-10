@@ -81,13 +81,18 @@
 
             <div id="visualizer-canvas" class="canvas-box"></div>
 
+            <div id="dfs-depth-container" class="search-input-container" style="display:none;">
+                <label for="dfs-depth">Tree Depth:</label>
+                <input type="number" id="dfs-depth" min="1" max="6" value="3">
+            </div>
+            
             <!-- Array Display -->
             <div class="array-display">
                 <h3 id="array-display-title">Current Array</h3>
                 <div id="array-values" class="array-values"></div>
             </div>
-
-            <div class="search-input-container">
+            
+            <div class="search-input-container" id="search-input-container">
                 <label for="search-input" id="search-input-label">Search Value:</label>
                 <input
                     type="number"
@@ -141,4 +146,5 @@
 
 </body>
 </html>
+
 
