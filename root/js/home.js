@@ -23,6 +23,9 @@ document.addEventListener("DOMContentLoaded", function () {
   const svg = d3.select("#sort-preview")
       .append("svg")
       .attr("width", "100%")
+      .style("max-width", "600px")
+      .style("display", "block")
+      .style("margin", "0 auto")
       .attr("viewBox", `0 0 ${width} ${height}`)
       .attr("preserveAspectRatio", "xMidYMid meet");
 
