@@ -1,3 +1,9 @@
+<!-- ===================== -->
+<!-- ALGORITHM VISUALIZER -->
+<!-- SENIOR PROJECT 2026 -->
+  <!-- CARA ANTONUCCI & JASPER MARTIN-->
+<!-- VISUALIZER PAGE -->
+<!-- ===================== -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,7 +23,7 @@
 
 <div class="layout">
 
-    <!-- Sidebar -->
+    <!-- Sidebar navigation -->
     <aside class="sidebar">
 
         <div class="logo">
@@ -33,13 +39,13 @@
         </nav>
     </aside>
 
-    <!-- SAME HEADER STRUCTURE -->
+    <!-- Shared top header -->
     <header class="site-header">
         <h1 class="word1"> Algorithm </h1>
         <h1 class="word2"> Visualizer </h1>
     </header>
 
-    <!-- Main Content -->
+    <!-- Visualizer page content -->
     <main class="content">
 
         <h1 id="algorithm-title">Bubble Sort</h1>
@@ -48,8 +54,10 @@
             Watch the algorithm step through comparisons and swaps.
         </p>
 
+        <!-- Main visualizer card - controls, canvas, and explanations -->
         <div class="visualizer-card">
 
+            <!-- Playback + algo controls -->
             <div class="controls-row">
 
                 <select id="algorithm-select" class="control-select">
@@ -79,19 +87,22 @@
                 </div>
             </div>
 
+            <!-- SVG canvas created by D3 in visualizer.js -->
             <div id="visualizer-canvas" class="canvas-box"></div>
 
+            <!-- DFS-only depth input -->
             <div id="dfs-depth-container" class="search-input-container" style="display:none;">
                 <label for="dfs-depth">Tree Depth:</label>
                 <input type="number" id="dfs-depth" min="1" max="6" value="3">
             </div>
             
-            <!-- Array Display -->
+            <!-- Array / traversal / distance display -->
             <div class="array-display">
                 <h3 id="array-display-title">Current Array</h3>
                 <div id="array-values" class="array-values"></div>
             </div>
             
+            <!-- Shared input for search target / source node -->
             <div class="search-input-container" id="search-input-container">
                 <label for="search-input" id="search-input-label">Search Value:</label>
                 <input
@@ -103,6 +114,7 @@
                 >
             </div>
             
+            <!-- Dijkstra edge editing  -->
             <div class="search-input-container" id="edge-editor" style="display:none;">
                 <div class="edge-help">
                     <strong>Editing Edges:</strong><br>
@@ -127,11 +139,11 @@
                 <button id="apply-edge-btn" class="btn btn-reset" type="button">Apply Edge</button>
             </div>
 
-            <!-- Pseudocode Placeholder -->
+            <!-- Pseudocode holder updates with the each algorithm -->
             <div class="pseudocode-display">
                 <h3>Pseudocode</h3>
                 <div class="pseudocode-box" id="pseudocode-box">
-                    <!-- pseudocode content portion purposely empty for dynamically changing content -->
+                    <!-- pseudocode content portion purposely empty - changes based on algo -->
                 </div>
             </div>
         </div>
@@ -140,7 +152,7 @@
 
 </div>
 
-<!-- D3 + JS -->
+<!-- D3 + VISUALIZER LOGIC -->
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <script src="js/visualizer.js"></script>
 

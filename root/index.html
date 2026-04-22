@@ -1,3 +1,9 @@
+<!-- ===================== -->
+<!-- ALGORITHM VISUALIZER -->
+<!-- SENIOR PROJECT 2026 -->
+ <!-- CARA ANTONUCCI & JASPER MARTIN-->
+<!-- HOME PAGE -->
+<!-- ===================== -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,100 +11,128 @@
     <meta charset="UTF-8">
 
     <!-- Makes site responsive on different screen sizes -->
+     <!-- does not mean anything for mobile - looks bad on small screen. future fix??? -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Browser tab title -->
+    <!-- makes browser tab title change -->
     <title>Algorithm Visualizer</title>
-
-    <!-- ===================== -->
-    <!-- CSS -->
-    <!-- ===================== -->
 
     <!-- Sidebar / menu layout -->
     <link rel="stylesheet" href="css/menu.css">
 
-    <!-- Global colors, fonts, spacing -->
+    <!-- colors, fonts, spacing -->
     <link rel="stylesheet" href="css/main.css">
 </head>
 
 <body>
-
-    <!-- ===================== -->
-    <!-- Page Layout Wrapper -->
-    <!-- Holds sidebar + main content -->
-    <!-- ===================== -->
     <div class="layout">
-
-        <!-- ===================== -->
-        <!-- Sidebar Navigation -->
-        <!-- Full-height vertical menu -->
-        <!-- ===================== -->
         <aside class="sidebar">
+            <div class="logo">
+                <h2 class="logo-top">Algorithm</h2>
+                <h2 class="logo-lower">Visualizer</h2>
+            </div>
 
-            <!-- Project title / logo -->
-        <div class="logo">
-            <h2 class="logo-top">Algorithm</h2>
-            <h2 class="logo-lower">Visualizer</h2>
-        </div>
-
-            <!-- Navigation links -->
             <nav class="nav-links">
-                <a href="index.html" class ="active">Home</a> <!-- class active indicates which page the user is currently on.-->
+                <a href="index.html" class="active">Home</a>
                 <a href="algorithms.html">Algorithms</a>
                 <a href="visualizer.html">Visualizer</a>
                 <a href="about.html">About</a>
             </nav>
         </aside>
 
+        <!-- Main header shown across the site -->
         <header class="site-header">
-            <h1 class="word1"> Algorithm </h1>
-            <h1 class="word2"> Visualizer </h1>
+            <h1 class="word1">Algorithm</h1>
+            <h1 class="word2">Visualizer</h1>
         </header>
 
-        <!-- ===================== -->
-        <!-- Main Page Content -->
-        <!-- Unique to this page -->
-        <!-- ===================== -->
-        <main class="content">
-
-            <!-- Page heading -->
-            <h1>Welcome to Algorithm Visualizer</h1> <!-- change color to yellow-->
-
-            <!-- Short intro text -->
-            <p>
-                This project provides interactive visualizations for core computer
-                science algorithms such as Breadth-First Search, Depth-First Search,
-                and sorting algorithms. Below is an example of our visualization in action with a simple bubble sort.
-            </p>
-
-            <div id="sort-preview">
-
-
+        <!-- Home page content -->
+        <main class="content home-page">
+            <div class="home-intro">
+                <h1>Welcome to Algorithm Visualizer</h1>
             </div>
 
-            <!-- Call-to-action -->
-            <a class="cta" href="Visualizer.html">
-                Start Visualizing
-            </a>
-            <a class="cta" href="algorithms.html">
-                Algorithm Desc.
-            </a>
-            <a class="cta" href="about.html">
-                About Project
-            </a>
+            <!-- Hero card combines project intro + live preview -->
+            <section class="hero-panel">
+                <div class="hero-card">
+                    <div class="hero-copy">
+                        <p class="hero-kicker">Animated examples for sorting, searching, and graph algorithms</p>
+                        <p class="hero-lead">
+                            Algorithm Visualizer turns algorithms into animated examples
+                            to turn reading into animation - hopefully to help you learn
+                        </p>
+                    </div>
 
-            
+                    <div class="preview-card">
+                        <div class="preview-header">
+                            <span class="preview-tag">Live Preview</span>
+                            <h2>Bubble Sort Demo</h2>
+                            
+                        </div>
+                        <div id="sort-preview"></div>
+                        <div class="hero-highlights preview-highlights">
+                            <div class="highlight-pill">Step-by-step playback</div>
+                            <div class="highlight-pill">Live pseudocode highlighting</div>
+                            <div class="highlight-pill">Visualized based on each algorithm</div>
+                        </div>
+                        <div class="hero-actions preview-actions">
+                            <a class="cta cta-primary" href="visualizer.html">Start Visualizing</a>
+                            <a class="cta cta-secondary" href="algorithms.html">Browse Algorithms</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
+            <!-- feature guide, summarized to make page look nicer -->
+            <section class="feature-section">
+                <div class="section-heading">
+                    <p class="section-kicker">What you can do</p>
+                </div>
+
+                <div class="feature-grid">
+                    <article class="feature-card">
+                        <h3>See algorithms animated</h3>
+                        <p>Follow sorting, searching, and graph algorithms as each step completes.</p>
+                    </article>
+                    <article class="feature-card">
+                        <h3>Control the Pace</h3>
+                        <p>Start, pause, step forward, reset, and adjust speed so the visualization matches your learning pace.</p>
+                    </article>
+                    <article class="feature-card">
+                        <h3>Follow each step</h3>
+                        <p>Highlighted pseudocode to match the steps of the algorithm.</p>
+                    </article>
+                </div>
+            </section>
+
+            <!-- more info -->
+            <section class="overview-panel">
+                <div class="overview-copy">
+                    <p class="section-kicker">Extra learning can only help!</p>
+                    <h2 class="section-title-left">A resource by students, for students</h2>
+                    <p>
+                        The goal of our project was to help bridge the gap between lecture notes and how they actually look
+                        when working. This tool is intended to supplement material provided in class and help students
+                        prepare to code algorithms on their own. 
+                        Thanks for checking it out :)
+                    </p>
+                </div>
+
+                <div class="overview-callout">
+                    <h3>To start</h3>
+                    <ol>
+                        <li>Go to Visualizer</li>
+                        <li>Pick your algorithm</li>
+                        <li>Follow along and use the controls as needed</li>
+                    </ol>
+                    <a class="cta cta-primary" href="visualizer.html">Open the Visualizer</a>
+                </div>
+            </section>
         </main>
-
     </div>
 
-    <!-- ===================== -->
-    <!-- JavaScript -->
-    <!-- No D3 on Home page -->
-    <!-- ===================== -->
+    <!-- D3 powers the live preview animation -->
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="js/home.js"></script>
-
 </body>
 </html>

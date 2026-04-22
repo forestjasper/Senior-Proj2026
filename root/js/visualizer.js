@@ -1,4 +1,12 @@
+/***********************
+    ALGORITHM VISUALIZER
+    SENIOR PROJECT 2026
+    CARA ANTONUCCI & JASPER MARTIN
+    MAIN VISUALIZER SCRIPT
+************************/
+
 document.addEventListener("DOMContentLoaded", function () {
+    // SHARED PAGE SPEED / DOM REFERENCES
     let speed = 150;
     const speedSlider = document.getElementById("speed-slider");
 
@@ -29,6 +37,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const matrixSize = 6;
     const dfsNodeCount = 8;
 
+    // PSEUDOCODE FOR EACH ALGORITHM
     const bubblePseudo = [
         "Color Key: Yellow indicates comparing",
         "           Orange indicates swapping",
@@ -95,6 +104,7 @@ document.addEventListener("DOMContentLoaded", function () {
         "end procedure"
     ];
 
+    // WRITE PSEUDOCODE LINES INTO THE DISPLAY PANEL
     function renderPseudocode(lines) {
         pseudocodeBox.innerHTML = "";
         lines.forEach((line, index) => {
@@ -106,6 +116,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    // HIGHLIGHT THE CURRENT PSEUDOCODE LINE
     function highlightPseudo(lineIndex, className) {
         const lines = document.querySelectorAll(".pseudocode-line");
         lines.forEach((line) => line.classList.remove("pseudo-compare", "pseudo-swap", "pseudo-done"));
@@ -113,13 +124,16 @@ document.addEventListener("DOMContentLoaded", function () {
         if (target) target.classList.add(className);
     }
 
+    // CLEAR OLD PSEUDOCODE HIGHLIGHTS
     function clearPseudoHighlight() {
         const lines = document.querySelectorAll(".pseudocode-line");
         lines.forEach((line) =>
             line.classList.remove("pseudo-compare", "pseudo-swap", "pseudo-done")
         );
     }
+// pseudocode looks good! good work -j
 
+    // SORT / SEARCH STATE
     let data = [];
     let originalData = [];
 
@@ -133,6 +147,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let foundIndex = null;
     let checkedIndices = [];
 
+    // DIJKSTRA STATE
     let matrixData = [];
     let originalMatrix = [];
     let dist = [];
@@ -144,6 +159,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let activeNeighbor = null;
     let dijkstraFinished = false;
 
+    // DFS STATE
     let dfsTree = null;
     let dfsStartNode = null;
     let dfsStack = [];
@@ -161,6 +177,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let isPlaying = false;
     let timeoutId = null;
 
+    // UPDATE ANIMATION SPEED FROM THE SLIDER
     speedSlider.addEventListener("input", function () {
         const level = parseInt(this.value, 10);
         speed = 1000 / level;
@@ -169,8 +186,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const depthInput = document.getElementById("dfs-depth");
     const dfsDepthContainer = document.getElementById("dfs-depth-container");
 
-    // Depth listener is registered below after all functions are defined.
+    // Depth listener is registered after all functions are defined.
 
+    // MAIN SVG CREATED ONCE, REUSED FOR ALL ALGO
     const svg = d3.select("#visualizer-canvas")
         .append("svg")
         .attr("width", width)
@@ -180,10 +198,12 @@ document.addEventListener("DOMContentLoaded", function () {
         .domain([0, 100])
         .range([0, height - 20]);
 
+    // MAKE RANDOM SORT / SEARCH DATA
     function generateData() {
         return Array.from({ length: barCount }, () => Math.floor(Math.random() * 100) + 1);
     }
 
+    // MAKE A CONNECTED RANDOM WEIGHTED MATRIX FOR DIJKSTRA
     function generateMatrixData(size) {
         const matrix = Array.from({ length: size }, () => Array(size).fill(0));
         for (let idx = 0; idx < size - 1; idx++) {
@@ -229,6 +249,7 @@ document.addEventListener("DOMContentLoaded", function () {
         return idx >= 0 && idx < count ? idx : -1;
     }
 
+    // RESET ALL DIJKSTRA-SPECIFIC PLAYBACK STATE
     function resetDijkstraState() {
         dist = Array(matrixData.length).fill(Infinity);
         visited = Array(matrixData.length).fill(false);
@@ -262,6 +283,7 @@ document.addEventListener("DOMContentLoaded", function () {
         editor.dataset.col = col;
     }
 
+    // FIND THE NEXT NODE WITH THE LOWEST DISTANCE
     function getMinUnvisitedNode() {
         let minDistance = Infinity;
         let minNode = -1;
@@ -278,9 +300,9 @@ document.addEventListener("DOMContentLoaded", function () {
         return source < target ? `${source}-${target}` : `${target}-${source}`;
     }
 
-    // FIX 1: Robust tree generation that guarantees every node gets a valid position.
-    // Uses a two-pass approach: first assign leaf slots, then center parents over children.
-    // Uses a two-pass approach: first assign leaf slots, then center parents over children.
+    // FIX 1: tree generation that gives all node a valid position.
+    // Uses a two-pass approach: first assign leaf slots, then center parents over child.
+    // BUILD THE TREE LEVEL BY LEVEL
     function generateDFSTree(size, chosenDepth = 3) {
         const depth = Math.max(1, Math.min(chosenDepth, 6));
         const requestedNodeCount = Math.max(1, size);
@@ -346,6 +368,7 @@ document.addEventListener("DOMContentLoaded", function () {
             depth
         };
     }
+    // RESET ALL DFS-SPECIFIC STATES
     function resetDFSState() {
         const nodeCount = dfsTree ? dfsTree.nodeCount : dfsNodeCount;
         dfsStartNode = null;
@@ -371,7 +394,7 @@ document.addEventListener("DOMContentLoaded", function () {
         searchInput.placeholder = `A - ${getNodeLabel(dfsTree.nodeCount - 1)}`;
     }
 
-    // FIX 3: Use parseDFSNodeLabel instead of parseSourceNodeLabel.
+    // FIX 3: Use parseDFSNodeLabel instead of parseSourceNodeLabel
     function initializeDFS() {
         if (dfsTarget !== null) return true;
 
@@ -390,6 +413,7 @@ document.addEventListener("DOMContentLoaded", function () {
         return true;
     }
 
+    // UPDATE PAGE TITLES / DESCRIPTIONS BASED ON THE CURRENT ALGO
     function setAlgorithmHeader() {
         if (!algorithmTitle || !algorithmDescription || !arrayDisplayTitle) return;
         if (algorithmSelect.value === "bubble") {
@@ -411,6 +435,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    // MASTER DRAW FUNCTION
     function drawVisualization() {
         svg.selectAll("*").remove();
         if (algorithmSelect.value === "bubble") {
@@ -424,6 +449,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    // DRAW BUBBLE SORT
     function drawBars() {
         svg.selectAll("rect")
             .data(data)
@@ -441,6 +467,7 @@ document.addEventListener("DOMContentLoaded", function () {
         drawArrayDisplay();
     }
 
+    // DRAW LINEAR SEARCH AS NODES
     function drawNodes() {
         const spacing = width / data.length;
         svg.selectAll("circle")
@@ -466,6 +493,7 @@ document.addEventListener("DOMContentLoaded", function () {
         drawArrayDisplay();
     }
 
+    // DRAW DIJKSTRA IN MATRIX + GRAPH VIEW
     function drawDijkstraViews() {
         const n = matrixData.length;
         if (!n) { drawArrayDisplay(); return; }
@@ -621,6 +649,7 @@ document.addEventListener("DOMContentLoaded", function () {
             .style("pointer-events", "none").text((d) => d.label);
     }
 
+    // DRAW DFS AS A TREE WITH NODES + EDGES
     function drawDFSGraph() {
         if (!dfsTree) { drawArrayDisplay(); return; }
 
@@ -701,6 +730,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         drawArrayDisplay();
     }
+    // DRAW THE LOWER INFO PANEL FOR EACH ALGORITHM
     function drawArrayDisplay() {
         arrayDisplay.innerHTML = "";
 
@@ -795,6 +825,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    // RUN ONE BUBBLE SORT STEP
     function bubbleStep() {
         if (i < barCount - 1) {
             if (j < barCount - i - 1) {
@@ -821,6 +852,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (isPlaying) timeoutId = setTimeout(bubbleStep, speed);
     }
 
+    // RUN ONE LINEAR SEARCH STEP
     function linearStep() {
         if (searchIndex >= data.length) {
             isPlaying = false; comparingIndex = null; drawVisualization(); return;
@@ -843,6 +875,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }, speed / 2);
     }
 
+    // RUN ONE DIJKSTRA STEP
     function dijkstraStep() {
         if (dijkstraFinished) { isPlaying = false; drawVisualization(); return; }
         const n = matrixData.length;
@@ -886,6 +919,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (isPlaying) timeoutId = setTimeout(dijkstraStep, speed);
     }
 
+    // RUN ONE DFS STEP
     function dfsStep() {
         if (dfsFinished) { isPlaying = false; drawVisualization(); return; }
         if (dfsStack.length === 0) {
@@ -935,6 +969,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (isPlaying) timeoutId = setTimeout(dfsStep, speed);
     }
 
+    // CHECK THE LINEAR SEARCH TARGET
     function initializeLinearTarget() {
         if (searchTarget !== null) return true;
         let value = parseInt(searchInput.value, 10);
@@ -945,6 +980,7 @@ document.addEventListener("DOMContentLoaded", function () {
         return true;
     }
 
+    // CHECK THE DIJKSTRA SOURCE NODE
     function initializeDijkstraSource() {
         if (sourceIndex !== null) return true;
         const parsedIndex = parseSourceNodeLabel(searchInput.value);
@@ -960,6 +996,7 @@ document.addEventListener("DOMContentLoaded", function () {
         return true;
     }
 
+    // RESET SHARED PLAYBACK STATE USED BY ALGOS
     function resetSharedState() {
         clearTimeout(timeoutId);
         isPlaying = false;
@@ -968,6 +1005,7 @@ document.addEventListener("DOMContentLoaded", function () {
         clearPseudoHighlight();
     }
 
+    // RESET CURRENT ALGO TO ORIGINAL DATA
     function reset() {
         resetSharedState();
         clearPseudoHighlight();
@@ -983,6 +1021,7 @@ document.addEventListener("DOMContentLoaded", function () {
         drawVisualization();
     }
 
+    // GENERATE NEW DATA FOR THE CURRENT ALGO
     function generateNewData() {
         resetSharedState();
         clearPseudoHighlight();
@@ -1004,6 +1043,7 @@ document.addEventListener("DOMContentLoaded", function () {
         drawVisualization();
     }
 
+    // SWITCH THE PAGE TO MATCH THE ALGO
     function applyAlgorithmMode() {
         document.getElementById("edge-editor").style.display = "none";
         dfsDepthContainer.style.display = "none";
@@ -1062,6 +1102,7 @@ document.addEventListener("DOMContentLoaded", function () {
         drawVisualization();
     }
 
+    // MAIN BUTTON EVENTS
     resetBtn.addEventListener("click", reset);
     newDataBtn.addEventListener("click", generateNewData);
     algorithmSelect.addEventListener("change", applyAlgorithmMode);
@@ -1106,12 +1147,11 @@ document.addEventListener("DOMContentLoaded", function () {
         dijkstraStep();
     });
 
-    // Depth input: listen on both "input" (every keystroke) and keydown Enter,
-    // so the tree regenerates immediately as the user types — no need to tab away.
+    // DFS DEPTH MAKES NEW TREE
     depthInput.addEventListener("input", function () {
         if (algorithmSelect.value !== "dfs") return;
         const raw = parseInt(this.value, 10);
-        if (isNaN(raw)) return;                        // still typing, wait for valid number
+        if (isNaN(raw)) return;                        // wait for valid number
         const depth = Math.min(Math.max(raw, 1), 6);
         clearTimeout(timeoutId);
         isPlaying = false;
@@ -1125,7 +1165,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (e.key === "Enter") this.dispatchEvent(new Event("input"));
     });
 
-    // Initialise
+    // INITIAL PAGE SETUP
     renderPseudocode(bubblePseudo);
     setAlgorithmHeader();
     searchContainer.style.display = "none";
@@ -1141,6 +1181,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     drawVisualization();
 });
+
 
 
 

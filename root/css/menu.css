@@ -1,6 +1,13 @@
-/* ===================== */
-/* Page Layout */
-/* ===================== */
+/***********************
+    ALGORITHM VISUALIZER
+    SENIOR PROJECT 2026
+    CARA ANTONUCCI & JASPER MARTIN
+    SHARED MENU / LAYOUT CSS
+************************/
+
+
+/* PAGE LAYOUT */
+
 
 .layout {
     /* Sidebar + content side by side */
@@ -10,9 +17,9 @@
     height: 120vh;
   }
   
-  /* ===================== */
-  /* Sidebar */
-  /* ===================== */
+
+  /* SIDEBAR */
+
   
   .sidebar {
     /* Fixed width */
@@ -28,9 +35,9 @@
     flex-shrink: 0;
   }
   
-  /* ===================== */
-  /* Logo / Title */
-  /* ===================== */
+  
+  /* LOGO */
+  
   .logo h2 {
     margin: 0;
     font-size: 25px;
@@ -48,9 +55,9 @@
     padding-bottom: 30px;
     color: #d4b476; /* accent color */
   }
-  /* ===================== */
-  /* Navigation Links */
-  /* ===================== */
+  
+  /* NAVIGATION LINKS */
+ 
   
   .nav-links {
     display: flex;
@@ -75,12 +82,12 @@
   .nav-links a.active {
     border-left: 4px solid #d4b476
   }
-  /* ===================== */
-  /* Main Content Area */
-  /* ===================== */
+
+  /* MAIN CONTENT AREA */
+
   
   .content {
-    /* Take remaining horizontal space */
+    /* Take remaining space */
     flex: 1;
   
     /* Page padding */
