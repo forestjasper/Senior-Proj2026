@@ -39,6 +39,23 @@
     gap: 12px;
 }
 
+/* CLARIFYING LABELS*/
+
+.algorithm-hint {
+    margin-top: 18px;
+    font-family: monospace;
+    font-size: 13px;
+    color: #a89060;
+    padding: 8px 12px;
+    background: #1c1f26;
+    border-radius: 8px;
+    border-left: 3px solid #d4b476;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
 /* BUTTON THEME */
 
 .btn {
@@ -175,3 +192,18 @@
     margin-top: 10px;
     line-height: 1.4;
   }
+#edge-from,
+#edge-to,
+#edge-weight,
+#dfs-depth {
+    background: #2a2d36;
+    color: white;
+    border: 1px solid #3c404c;
+    padding: 6px 10px;
+    border-radius: 6px;
+    text-align: center;
+}
+
+#edge-from, #edge-to { width: 52px; }
+#edge-weight          { width: 82px; }
+#dfs-depth            { width: 60px; }

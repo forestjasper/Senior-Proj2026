@@ -433,6 +433,17 @@ document.addEventListener("DOMContentLoaded", function () {
             algorithmDescription.textContent = "Traverse an adjacency matrix and graph view together to build shortest distances from a source node.";
             arrayDisplayTitle.textContent = "Distance Table";
         }
+        //  use labels - changes for each
+        const hint = document.getElementById("algorithm-hint");
+        if (algorithmSelect.value === "bubble") {
+            hint.textContent = "Click any value in the array below to change the values being sorted! If you want new random data, press 'new data.' To reset your values, hit reset";
+        } else if (algorithmSelect.value === "linear") {
+            hint.textContent = "Click any value in the array below to change the values, then enter a number to search for and start! If you want new random data, press 'new data.' To reset your values, hit reset";
+        } else if (algorithmSelect.value === "dfs") {
+            hint.textContent = "Adjust the depth of the tree to your liking, then enter a node to search for and hit start. If you want a new tree, press 'new data.' To reset your current one, hit reset";
+        } else {
+            hint.textContent = "Click any edge on the graph or matrix to edit it. Enter a source node to start! If you want new random data, press 'new data.' To reset your current matrix, hit reset";
+        }
     }
 
     // MASTER DRAW FUNCTION
@@ -971,7 +982,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // CHECK THE LINEAR SEARCH TARGET
     function initializeLinearTarget() {
-        if (searchTarget !== null) return true;
+        //if (searchTarget !== null) return true;
         let value = parseInt(searchInput.value, 10);
         if (Number.isNaN(value)) { alert("Please enter a value between 1 and 100."); return false; }
         if (value < 1) value = 1;
@@ -1163,6 +1174,16 @@ document.addEventListener("DOMContentLoaded", function () {
     });
     depthInput.addEventListener("keydown", function (e) {
         if (e.key === "Enter") this.dispatchEvent(new Event("input"));
+    });
+    searchInput.addEventListener("input", function () {
+        if (algorithmSelect.value === "linear") {
+            searchTarget = null;
+            foundIndex = null;
+            searchIndex = 0;
+            checkedIndices = [];
+            comparingIndex = null;
+            drawVisualization();
+        }
     });
 
     // INITIAL PAGE SETUP

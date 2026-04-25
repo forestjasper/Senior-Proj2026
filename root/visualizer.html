@@ -89,6 +89,8 @@
 
             <!-- SVG canvas created by D3 in visualizer.js -->
             <div id="visualizer-canvas" class="canvas-box"></div>
+            <!-- Algorithm use labels-->
+            <p id="algorithm-hint" class="algorithm-hint"></p>
 
             <!-- DFS-only depth input -->
             <div id="dfs-depth-container" class="search-input-container" style="display:none;">
@@ -131,11 +133,11 @@
                   </div>
                   
                 <label for="edge-from">Edge:</label>
-                <input type="text" id="edge-from" placeholder="A" maxlength="1" style="width:52px;text-transform:uppercase;">
+                <input type="text" id="edge-from" placeholder="A" maxlength="1">
                 <span>-</span>
-                <input type="text" id="edge-to" placeholder="B" maxlength="1" style="width:52px;text-transform:uppercase;">
+                <input type="text" id="edge-to" placeholder="B" maxlength="1">
                 <label for="edge-weight">Weight:</label>
-                <input type="number" id="edge-weight" min="0" max="99" placeholder="0-99" style="width:82px;">
+                <input type="number" id="edge-weight" min="0" max="99" placeholder="0-99">
                 <button id="apply-edge-btn" class="btn btn-reset" type="button">Apply Edge</button>
             </div>
 
