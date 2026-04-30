@@ -68,7 +68,8 @@ document.addEventListener("DOMContentLoaded", function () {
         "    if A[i] == target",
         "        return i",
         "    end if",
-        "end for"
+        "end for",
+        "end procedure"
     ];
 
     const dijkstraPseudo = [
@@ -130,6 +131,12 @@ document.addEventListener("DOMContentLoaded", function () {
         lines.forEach((line) =>
             line.classList.remove("pseudo-compare", "pseudo-swap", "pseudo-done")
         );
+    }
+
+    // HIGHLIGHT THE FINAL PSEUDOCODE LINE WHEN AN ALGORITHM FINISHES
+    function highlightProcedureEnd(lineIndex) {
+        highlightPseudo(lineIndex, "pseudo-done");
+        drawVisualization();
     }
 // pseudocode looks good! good work -j
 
@@ -856,7 +863,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         } else {
             isPlaying = false;
-            drawVisualization();
+            highlightProcedureEnd(16);
             return;
         }
         drawVisualization();
@@ -866,7 +873,10 @@ document.addEventListener("DOMContentLoaded", function () {
     // RUN ONE LINEAR SEARCH STEP
     function linearStep() {
         if (searchIndex >= data.length) {
-            isPlaying = false; comparingIndex = null; drawVisualization(); return;
+            isPlaying = false;
+            comparingIndex = null;
+            highlightProcedureEnd(10);
+            return;
         }
         comparingIndex = searchIndex;
         highlightPseudo(6, "pseudo-compare");
@@ -876,6 +886,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 foundIndex = searchIndex;
                 highlightPseudo(7, "pseudo-done");
                 isPlaying = false;
+                drawVisualization();
+                return;
             } else {
                 checkedIndices.push(searchIndex);
                 highlightPseudo(6, "pseudo-swap");
@@ -893,7 +905,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (currentNode === null) {
             const nextNode = getMinUnvisitedNode();
             if (nextNode === -1 || dist[nextNode] === Infinity) {
-                highlightPseudo(13, "pseudo-done");
+                highlightPseudo(14, "pseudo-done");
                 dijkstraFinished = true; isPlaying = false;
                 comparingIndex = null; swappingIndex = null; activeNeighbor = null;
                 drawVisualization(); return;
@@ -925,7 +937,12 @@ document.addEventListener("DOMContentLoaded", function () {
         visited[currentNode] = true;
         highlightPseudo(13, "pseudo-done");
         currentNode = null; neighborIndex = 0; comparingIndex = null; activeNeighbor = null; swappingIndex = null;
-        if (visited.every((v) => v)) { dijkstraFinished = true; isPlaying = false; }
+        if (visited.every((v) => v)) {
+            dijkstraFinished = true;
+            isPlaying = false;
+            highlightProcedureEnd(14);
+            return;
+        }
         drawVisualization();
         if (isPlaying) timeoutId = setTimeout(dijkstraStep, speed);
     }
@@ -944,7 +961,11 @@ document.addEventListener("DOMContentLoaded", function () {
             dfsTraversalOrder.push(frame.node);
             highlightPseudo(5, "pseudo-done");
             if (frame.node === dfsTarget) {
-                dfsFound = true; dfsFinished = true; isPlaying = false; drawVisualization(); return;
+                dfsFound = true;
+                dfsFinished = true;
+                isPlaying = false;
+                highlightProcedureEnd(11);
+                return;
             }
             drawVisualization();
             if (isPlaying) timeoutId = setTimeout(dfsStep, speed);
