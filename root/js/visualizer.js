@@ -959,7 +959,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!dfsVisited[frame.node]) {
             dfsVisited[frame.node] = true;
             dfsTraversalOrder.push(frame.node);
-            highlightPseudo(5, "pseudo-done");
+            highlightPseudo(5, "pseudo-compare");
             if (frame.node === dfsTarget) {
                 dfsFound = true;
                 dfsFinished = true;
@@ -995,7 +995,7 @@ document.addEventListener("DOMContentLoaded", function () {
             highlightPseudo(11, "pseudo-done"); isPlaying = false;
         } else {
             dfsCurrent = dfsStack[dfsStack.length - 1].node;
-            highlightPseudo(10, "pseudo-done");
+            highlightPseudo(5, "pseudo-done");
         }
         drawVisualization();
         if (isPlaying) timeoutId = setTimeout(dfsStep, speed);
